@@ -1,54 +1,14 @@
 # function to use inside a webworker.
 # This function needs to run inside an environment that has a 'self'.
+# This specific worker is targeted towards the node.js headless_client environment.
 
 JASON = require 'jason'
 fs = require 'fs'
 
-betterConsole = () ->
-
-  self.logLimit = 200;
-  self.logsLogged = 0;
-
-  self.transferableSupported = () -> true
-
-  self.console = log: ->
-    if self.logsLogged++ is self.logLimit
-      self.postMessage
-        type: "console-log"
-        args: ["Log limit " + self.logLimit + " reached; shutting up."]
-        id: self.workerID
-
-    else if self.logsLogged < self.logLimit
-      args = [].slice.call(arguments)
-      i = 0
-
-      while i < args.length
-        args[i] = args[i].toString()  if args[i].constructor.className is "Thang" or args[i].isComponent  if args[i] and args[i].constructor
-        ++i
-      try
-        self.postMessage
-          type: "console-log"
-          args: args
-          id: self.workerID
-
-      catch error
-        self.postMessage
-          type: "console-log"
-          args: [
-              "Could not post log: " + args
-              error.toString()
-              error.stack
-              error.stackTrace
-          ]
-          id: self.workerID
-
-  # so that we don't crash when debugging statements happen
-  self.console.error = self.console.info = self.console.log
-  GLOBAL.console = console = self.console
-  self.console
-
-
+#This function runs inside the webworker.
 work = () ->
+
+  console.log = ->
 
   World = self.require('lib/world/world');
   GoalManager = self.require('lib/world/GoalManager');
@@ -79,13 +39,14 @@ work = () ->
 
 
   self.onWorldLoaded = onWorldLoaded = ->
-    console.log
+
     self.goalManager.worldGenerationEnded()
     t1 = new Date()
     diff = t1 - self.t0
     transferableSupported = self.transferableSupported()
     try
-      serialized = self.world.serialize()
+      serialized = serializedWorld: undefined # self.world.serialize()
+      transferableSupported = false
     catch error
       console.log "World serialization error:", error.toString() + "\n" + error.stack or error.stackTrace
     t2 = new Date()

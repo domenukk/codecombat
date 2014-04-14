@@ -237,7 +237,7 @@ $.ajax
           return
 
         @supermodel ?= new SuperModel()
-        @god = new God maxWorkerPoolSize: 2, maxAngels: 2  # Start loading worker.
+        @god = new God maxWorkerPoolSize: 1, maxAngels: 1  # Start loading worker.
 
         console.log "Creating loader with levelID: " + levelID + " and SessionID: " + @task.getFirstSessionID() + " - task: " + JSON.stringify(@task)
 
@@ -283,7 +283,7 @@ $.ajax
         console.log "Creating World."
         @god.createWorld()
         Backbone.Mediator.subscribeOnce 'god:infinite-loop', @onInfiniteLoop, @
-        Backbone.Mediator.subscribeOnce 'god:new-world-created', @processResults, @
+        Backbone.Mediator.subscribeOnce 'god:goals-calculated', @processResults, @
 
       onInfiniteLoop: ->
         console.warn "Skipping infinitely looping game."
@@ -291,7 +291,9 @@ $.ajax
         _.delay @cleanupAndSimulateAnotherTask, @retryDelayInSeconds * 1000
 
       processResults: (simulationResults) ->
+
         console.log "Processing Results"
+
         taskResults = @formTaskResultsObject simulationResults
         console.warn taskResults
         @sendResultsBackToServer taskResults

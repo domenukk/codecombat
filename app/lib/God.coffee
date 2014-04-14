@@ -51,15 +51,17 @@ module.exports = class God
     worker.addEventListener 'message', @onWorkerMessage(worker)
     worker
 
-  onWorkerMessage: (worker) => (event) =>
-    if event.data.type is 'worker-initialized'
-      #console.log @id, "worker initialized after", ((new Date()) - worker.creationTime), "ms (before it was needed)"
-      worker.initialized = true
-      worker.removeEventListener 'message', @onWorkerMessage(worker)
-    else if event.data.type is 'console-log'
-      console.log "|" + @god.id + "'s " + @id + "|", event.data.args...
-    else
-      console.warn "Received strange word from God: #{event.data.type}"
+  onWorkerMessage: (worker) =>
+    unless worker.onMessage?
+      worker.onMessage = (event) =>
+        if event.data.type is 'worker-initialized'
+          #console.log @id, "worker initialized after", ((new Date()) - worker.creationTime), "ms (before it was needed)"
+          worker.initialized = true
+          worker.removeEventListener 'message', worker.onMessage
+        else
+          console.warn "Received strange word from God: #{event.data.type}"
+    worker.onMessage
+
 
   getAngel: ->
     freeAngel = null
@@ -113,22 +115,33 @@ module.exports = class God
     }}
 
   beholdWorld: (angel, serialized, goalStates) ->
-    console.log "Behold world."
+    unless serialized
+      # We're only interested in goalStates.
+      @latestGoalStates = goalStates;
+      Backbone.Mediator.publish('god:goals-calculated', goalStates: goalStates, team: me.team)
+      return
+
+    console.log "Beholding world."
     worldCreation = angel.started
     angel.free()
     return if @latestWorldCreation? and worldCreation < @latestWorldCreation
     @latestWorldCreation = worldCreation
     @latestGoalStates = goalStates
+
+    console.warn "Goal states: " + JSON.stringify(goalStates)
+
     window.BOX2D_ENABLED = false  # Flip this off so that if we have box2d in the namespace, the Collides Components still don't try to create bodies for deserialized Thangs upon attachment
     World.deserialize serialized, @worldClassMap, @lastSerializedWorldFrames, worldCreation, @finishBeholdingWorld
     window.BOX2D_ENABLED = true
     @lastSerializedWorldFrames = serialized.frames
 
   finishBeholdingWorld: (newWorld) =>
-    console.log "Beholding finished"
     newWorld.findFirstChangedFrame @world
     @world = newWorld
     errorCount = (t for t in @world.thangs when t.errorsOut).length
+
+    console.log "Publishing."
+
     Backbone.Mediator.publish('god:new-world-created', world: @world, firstWorld: @firstWorld, errorCount: errorCount, goalStates: @latestGoalStates, team: me.team)
     for scriptNote in @world.scriptNotes
       Backbone.Mediator.publish scriptNote.channel, scriptNote.event
@@ -146,7 +159,7 @@ module.exports = class God
     userCodeMap
 
   destroy: ->
-    #TODO: Get back. worker.removeEventListener 'message', @onWorkerMessage(worker) for worker in @workerPool ? []
+    worker.removeEventListener 'message', @onWorkerMessage for worker in @workerPool ? []
     angel.destroy() for angel in @angels
     @dead = true
     Backbone.Mediator.unsubscribe('tome:cast-spells', @onTomeCast, @)
@@ -287,7 +300,7 @@ class Angel
       when 'user-code-problem'
         @god.angelUserCodeProblem @, event.data.problem
       when 'abort'
-        console.log @id, "aborted."
+        #console.log @id, "aborted."
         clearTimeout @abortTimeout
         @free()
         @god.angelAborted @
