@@ -1,6 +1,8 @@
 debug = false
+testing = true
 
-server = "http://127.0.0.1:3000"
+server = if testing then "http://127.0.0.1:3000" else "http://codecombat.com"
+
 # Disabled modules
 disable = [
   'lib/AudioPlayer'
@@ -178,7 +180,8 @@ $.ajax
     LevelLoader = require 'lib/LevelLoader'
     GoalManager = require 'lib/world/GoalManager'
 
-    God = require 'lib/God' #  require './headless_client/Buddha' # 'lib/God'
+    God = require './headless_client/Buddha' # 'lib/God'
+
 
     workerCode = require('./headless_client/worker_world')
 
@@ -197,6 +200,8 @@ $.ajax
         @taskURL = 'queue/scoring'
         @simulatedByYou = 0
 
+        @god = new God maxWorkerPoolSize: 1, maxAngels: 1, workerCode: workerCode # Start loading worker.
+
       destroy: ->
         @off()
         @cleanupSimulation()
@@ -204,6 +209,13 @@ $.ajax
 
       fetchAndSimulateTask: =>
         return if @destroyed
+
+        if testing
+          test = require './test.js'
+          console.log test
+          sim.setupSimulationAndLoadLevel test, "Testing...", status: 400
+          return
+
         @trigger 'statusUpdate', 'Fetching simulation data!'
         $.ajax
           url: @taskURL
@@ -218,10 +230,12 @@ $.ajax
         @simulateAnotherTaskAfterDelay()
 
       handleNoGamesResponse: ->
+        console.log "Nothing to do."
         @trigger 'statusUpdate', 'There were no games to simulate--nice. Retrying in 10 seconds.'
         @simulateAnotherTaskAfterDelay()
 
       simulateAnotherTaskAfterDelay: =>
+        console.log "Retrying..."
         console.log "Retrying in #{@retryDelayInSeconds}"
         retryDelayInMilliseconds = @retryDelayInSeconds * 1000
         _.delay @fetchAndSimulateTask, retryDelayInMilliseconds
@@ -240,7 +254,6 @@ $.ajax
           return
 
         @supermodel ?= new SuperModel()
-        @god = new God maxWorkerPoolSize: 1, maxAngels: 1, workerCode: workerCode # Start loading worker.
 
         console.log "Creating loader with levelID: " + levelID + " and SessionID: " + @task.getFirstSessionID() + " - task: " + JSON.stringify(@task)
 
@@ -308,6 +321,10 @@ $.ajax
       sendResultsBackToServer: (results) =>
         @trigger 'statusUpdate', 'Simulation completed, sending results back to server!'
         console.log "Sending result back to server"
+
+        if testing
+          return @fetchAndSimulateTask()
+
         $.ajax
           url: "queue/scoring"
           data: results
@@ -328,7 +345,7 @@ $.ajax
         console.log "Task registration error: #{JSON.stringify error}"
 
       cleanupAndSimulateAnotherTask: =>
-        @cleanupSimulation()
+        #@cleanupSimulation()      Not needed for Buddha.
         @fetchAndSimulateTask()
 
       cleanupSimulation: ->
@@ -507,7 +524,6 @@ $.ajax
         spellKeyToSourceMap
 
     sim = new Simulator()
-    #sim.fetchAndSimulateTask()
-    test = require './test.js'
-    console.log test
-    sim.setupSimulationAndLoadLevel test, "Testing...", status: 400
+
+
+    sim.fetchAndSimulateTask()

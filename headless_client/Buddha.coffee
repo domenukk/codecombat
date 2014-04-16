@@ -91,7 +91,7 @@ class Angel
     @shared.busyAngels.pop @
     @doWork()
 
-  infinitelyLooped: ->
+  infinitelyLooped: =>
     unless @aborting
       problem = type: "runtime", level: "error", id: "runtime_InfiniteLoop", message: "Code never finished. It's either really slow or has an infinite loop."
       Backbone.Mediator.publish 'god:user-code-problem', problem: problem
@@ -101,7 +101,7 @@ class Angel
   workIfIdle: ->
     @doWork() unless @running
 
-  doWork: ->
+  doWork: =>
     console.log "work."
     return if @aborted
     console.log @id + ": is initialized: " + @initialized + ", workQueue.lenght: " + @shared.workQueue.length
@@ -125,7 +125,7 @@ class Angel
       console.log "Nobody is working with " + id
       @hireWorker()
 
-  abort: ->
+  abort: =>
     if @worker and @running
       console.log "Aborting " + @id
       @running = false
@@ -139,8 +139,8 @@ class Angel
     @aborting = false
     @running = false
     @shared.busyAngels.pop @
-    @worker.removeEventListener 'message', @onWorkerMessage
-    @worker.terminate()
+    @worker?.removeEventListener 'message', @onWorkerMessage
+    @worker?.terminate()
     @worker = null
     @initialized = false
     @work = null
@@ -219,7 +219,7 @@ module.exports = class God
   destroy: ->
     @angelsShare.workQueue.push Angel.cyanide
     angel.kill for angel in @angelsShare.busyAngels
-    @angelsShare = null
     Backbone.Mediator.unsubscribe('tome:cast-spells', @onTomeCast, @)
     @angelsShare.goalManager?.destroy()
     @angelsShare.goalManager = null
+    @angelsShare = null
