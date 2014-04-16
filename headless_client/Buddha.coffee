@@ -185,7 +185,7 @@ module.exports = class God
     # ~20MB per idle worker + angel overhead - in this implementation, every Angel maps to 1 worker
     angelCount = options.maxAngels ? options.maxWorkerPoolSize ? 2  # How many concurrent Angels/web workers to use at a time
 
-    @angelsShare.angels.push new Angel(@nextID(), @angelsShare) for i in [0...angelCount]
+    new Angel(@nextID(), @angelsShare) for i in [0...angelCount]
     Backbone.Mediator.subscribe 'tome:cast-spells', @onTomeCast, @
 
   onTomeCast: (e) ->
