@@ -7,8 +7,9 @@ fs = require 'fs'
 
 #This function runs inside the webworker.
 work = () ->
+  console.log "starting..."
 
-  console.log = ->
+  initialized = false;
 
   World = self.require('lib/world/world');
   GoalManager = self.require('lib/world/GoalManager');
@@ -90,7 +91,6 @@ work = () ->
       type: "world-load-progress-changed"
       progress: progress
 
-
   self.abort = abort = ->
     #console.log "Abort called for worker."
     if self.world and self.world.name
@@ -108,14 +108,10 @@ work = () ->
     self[event.data.func] event.data.args
 
   self.postMessage type: "worker-initialized"
-
+  initialized = true
 
 world = fs.readFileSync "./public/javascripts/world.js", 'utf8'
 
-
-#window.BOX2D_ENABLED = true;
-
-newConsole = "newConsole = #{}JASON.stringify newConsole}()";
 
 ret = """
 
@@ -124,28 +120,19 @@ ret = """
 
   self.workerID = "Worker";
 
-  console = #{JASON.stringify betterConsole}();
-
   try {
+    // the world javascript file
     #{world};
 
     // Don't let user generated code access stuff from our file system!
     self.importScripts = importScripts = null;
     self.native_fs_ = native_fs_ = null;
 
-
+    // the actual function
     #{JASON.stringify work}();
   }catch (error) {
     self.postMessage({"type": "console-log", args: ["An unhandled error occured: ", error.toString(), error.stack], id: -1});
   }
 """
-
-
-#console = #{JASON.stringify createConsole}();
-#
-#  console.error = console.info = console.log;
-#self.console = console;
-#GLOBAL.console = console;
-
 
 module.exports = new Function(ret)

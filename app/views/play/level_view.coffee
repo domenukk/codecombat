@@ -161,7 +161,7 @@ module.exports = class PlayLevelView extends View
     team = @getQueryVariable("team") ? @world.teamForPlayer(0)
     @loadOpponentTeam(team)
     @god.level = @level.serialize @supermodel
-    @god.worldClassMap = @world.classMap
+    @god.setWorldClassMap @world.classMap
     @setTeam team
     @initSurface()
     @initGoalManager()
@@ -405,7 +405,7 @@ module.exports = class PlayLevelView extends View
 
   initGoalManager: ->
     @goalManager = new GoalManager(@world, @level.get('goals'))
-    @god.goalManager = @goalManager
+    @god.setGoalManager @goalManager
 
   initScriptManager: ->
     @scriptManager = new ScriptManager({scripts: @world.scripts or [], view:@, session: @session})

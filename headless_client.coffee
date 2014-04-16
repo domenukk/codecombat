@@ -1,6 +1,6 @@
 debug = false
 
-server = "http://codecombat.com"
+server = "http://127.0.0.1:3000"
 # Disabled modules
 disable = [
   'lib/AudioPlayer'
@@ -29,7 +29,9 @@ JASON = require 'jason'
 # Global emulated stuff
 GLOBAL.window = GLOBAL
 GLOBAL.Worker = require('webworker-threads').Worker
-Worker::removeEventListener = -> #This webworker api has only one event listener at a time.
+Worker::removeEventListener = (what) ->
+  if what is 'message'
+    @onmessage = -> #This webworker api has only one event listener at a time.
 
 GLOBAL.tv4 = require('tv4').tv4
 
@@ -176,8 +178,9 @@ $.ajax
     LevelLoader = require 'lib/LevelLoader'
     GoalManager = require 'lib/world/GoalManager'
 
-    God = require 'lib/God'
-    God.worker = require('./headless_client/worker_world')
+    God = require './headless_client/Buddha' # 'lib/God'
+
+    workerCode = require('./headless_client/worker_world')
 
     SuperModel = require 'models/SuperModel'
 
@@ -237,7 +240,7 @@ $.ajax
           return
 
         @supermodel ?= new SuperModel()
-        @god = new God maxWorkerPoolSize: 1, maxAngels: 1  # Start loading worker.
+        @god = new God maxWorkerPoolSize: 1, maxAngels: 1, workerCode: workerCode # Start loading worker.
 
         console.log "Creating loader with levelID: " + levelID + " and SessionID: " + @task.getFirstSessionID() + " - task: " + JSON.stringify(@task)
 
@@ -259,6 +262,10 @@ $.ajax
           @commenceSimulationAndSetupCallback()
         catch err
           console.log "There was an error in simulation(#{err}). Trying again in #{@retryDelayInSeconds} seconds"
+
+          #TODO: Comment out.
+          throw err
+
           @simulateAnotherTaskAfterDelay()
 
       assignWorldAndLevelFromLevelLoaderAndDestroyIt: ->
@@ -270,18 +277,18 @@ $.ajax
 
       setupGod: ->
         @god.level = @level.serialize @supermodel
-        @god.worldClassMap = @world.classMap
+        @god.setWorldClassMap = @world.classMap
         @setupGoalManager()
-        @setupGodSpells()
 
       setupGoalManager: ->
-        @god.goalManager = new GoalManager @world
-        @god.goalManager.goals = @god.level.goals
-        @god.goalManager.goalStates = @manuallyGenerateGoalStates()
+        goalManager = new GoalManager @world
+        goalManager.goals = @god.level.goals
+        goalManager.goalStates = @manuallyGenerateGoalStates()
+        @god.setGoalManager goalManager
 
       commenceSimulationAndSetupCallback: ->
         console.log "Creating World."
-        @god.createWorld()
+        @god.createWorld @generateSpellsObject()
         Backbone.Mediator.subscribeOnce 'god:infinite-loop', @onInfiniteLoop, @
         Backbone.Mediator.subscribeOnce 'god:goals-calculated', @processResults, @
 
@@ -381,9 +388,6 @@ $.ajax
               "Ogre Base": false
             status: "incomplete"
 
-      setupGodSpells: ->
-        @generateSpellsObject()
-        @god.spells = @spells
 
       generateSpellsObject: ->
         @currentUserCodeMap = @task.generateSpellKeyToSourceMap()
@@ -504,7 +508,7 @@ $.ajax
         spellKeyToSourceMap
 
     sim = new Simulator()
-    sim.fetchAndSimulateTask()
-    #test = require './test.js'
-    #console.log test
-    #sim.setupSimulationAndLoadLevel test, "Testing...", status: 400
+    #sim.fetchAndSimulateTask()
+    test = require './test.js'
+    console.log test
+    sim.setupSimulationAndLoadLevel test, "Testing...", status: 400

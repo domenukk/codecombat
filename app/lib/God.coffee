@@ -28,8 +28,7 @@ module.exports = class God
 
   onTomeCast: (e) ->
     return if @dead
-    @spells = e.spells
-    @createWorld()
+    @createWorld e.spells
 
   fillWorkerPool: =>
     return unless Worker and not @dead
@@ -55,7 +54,7 @@ module.exports = class God
     unless worker.onMessage?
       worker.onMessage = (event) =>
         if event.data.type is 'worker-initialized'
-          #console.log @id, "worker initialized after", ((new Date()) - worker.creationTime), "ms (before it was needed)"
+          console.log @id, "worker initialized after", ((new Date()) - worker.creationTime), "ms (before it was needed)"
           worker.initialized = true
           worker.removeEventListener 'message', worker.onMessage
         else
@@ -93,7 +92,7 @@ module.exports = class God
     #console.log "UserCodeProblem:", '"' + problem.message + '"', "for", problem.userInfo.thangID, "-", problem.userInfo.methodName, 'at line', problem.ranges?[0][0][0], 'column', problem.ranges?[0][0][1]
     Backbone.Mediator.publish 'god:user-code-problem', problem: problem
 
-  createWorld: ->
+  createWorld: (@spells) ->
     #console.log @id + ': "Let there be light upon', @world.name + '!"'
     unless Worker?  # profiling world simulation is easier on main thread, or we are IE9
       setTimeout @simulateWorld, 1
@@ -114,11 +113,17 @@ module.exports = class God
       goals: @goalManager?.getGoals()
     }}
 
+  setGoalManger: (@goalManager) =>
+
+  setWorldClassMap: (@worldClassMap) =>
+
   beholdWorld: (angel, serialized, goalStates) ->
     unless serialized
       # We're only interested in goalStates.
       @latestGoalStates = goalStates;
       Backbone.Mediator.publish('god:goals-calculated', goalStates: goalStates, team: me.team)
+      unless _.find @angels, 'busy'
+        @spells = null  # Don't hold onto old spells; memory leaks
       return
 
     console.log "Beholding world."
@@ -139,9 +144,6 @@ module.exports = class God
     newWorld.findFirstChangedFrame @world
     @world = newWorld
     errorCount = (t for t in @world.thangs when t.errorsOut).length
-
-    console.log "Publishing."
-
     Backbone.Mediator.publish('god:new-world-created', world: @world, firstWorld: @firstWorld, errorCount: errorCount, goalStates: @latestGoalStates, team: me.team)
     for scriptNote in @world.scriptNotes
       Backbone.Mediator.publish scriptNote.channel, scriptNote.event
@@ -288,9 +290,12 @@ class Angel
     @worker.addEventListener 'message', @onWorkerMessage
 
   onWorkerMessage: (event) =>
+    console.log JSON.stringify event
+
     switch event.data.type
       when 'worker-initialized'
         console.log "Worker", @id, "initialized after", ((new Date()) - @worker.creationTime), "ms (we had been waiting for it)"
+        @worker.initialized = true
       when 'new-world'
         @god.beholdWorld @, event.data.serialized, event.data.goalStates
       when 'world-load-progress-changed'
@@ -308,3 +313,5 @@ class Angel
         clearTimeout @condemnTimeout
       else
         console.log "Unsupported message:", event.data
+
+

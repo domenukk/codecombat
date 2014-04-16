@@ -152,7 +152,7 @@ module.exports = class SpectateLevelView extends View
     team = @world.teamForPlayer(0)
     @loadOpponentTeam(team)
     @god.level = @level.serialize @supermodel
-    @god.worldClassMap = @world.classMap
+    @god.setWorldClassMap @world.classMap
     @setTeam team
     @initSurface()
     @initGoalManager()
@@ -382,7 +382,7 @@ module.exports = class SpectateLevelView extends View
 
   initGoalManager: ->
     @goalManager = new GoalManager(@world, @level.get('goals'))
-    @god.goalManager = @goalManager
+    @god.setGoalManager @goalManager
 
   initScriptManager: ->
     if @world.scripts
@@ -465,6 +465,8 @@ module.exports = class SpectateLevelView extends View
           cb("error", jqxhr.statusText)
         else
           cb(null, $.parseJSON(jqxhr.responseText))
+
+  set https://gist.github.com/alexaivars/1599437
 
   destroy: ()->
     @levelLoader?.destroy()

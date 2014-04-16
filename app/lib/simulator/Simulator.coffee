@@ -78,17 +78,18 @@ module.exports = class Simulator extends CocoClass
 
   setupGod: ->
     @god.level = @level.serialize @supermodel
-    @god.worldClassMap = @world.classMap
+    @god.setWorldClassMap = @world.classMap
     @setupGoalManager()
     @setupGodSpells()
 
   setupGoalManager: ->
-    @god.goalManager = new GoalManager @world
-    @god.goalManager.goals = @god.level.goals
-    @god.goalManager.goalStates = @manuallyGenerateGoalStates()
+    goalManager = new GoalManager @world
+    goalManager.goals = @god.level.goals
+    goalManager.goalStates = @manuallyGenerateGoalStates()
+    @god.setGoalManager goalManager
 
   commenceSimulationAndSetupCallback: ->
-    @god.createWorld()
+    @god.createWorld @generateSpellsObject()
     Backbone.Mediator.subscribeOnce 'god:infinite-loop', @onInfiniteLoop, @
     Backbone.Mediator.subscribeOnce 'god:new-world-created', @processResults, @
 
@@ -182,10 +183,6 @@ module.exports = class Simulator extends CocoClass
         killed:
           "Ogre Base": false
         status: "incomplete"
-
-  setupGodSpells: ->
-    @generateSpellsObject()
-    @god.spells = @spells
 
   generateSpellsObject: ->
     @currentUserCodeMap = @task.generateSpellKeyToSourceMap()
