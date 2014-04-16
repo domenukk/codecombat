@@ -178,7 +178,7 @@ $.ajax
     LevelLoader = require 'lib/LevelLoader'
     GoalManager = require 'lib/world/GoalManager'
 
-    God = require './headless_client/Buddha' # 'lib/God'
+    God = require 'lib/God' #  require './headless_client/Buddha' # 'lib/God'
 
     workerCode = require('./headless_client/worker_world')
 

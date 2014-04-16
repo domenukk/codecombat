@@ -18,13 +18,14 @@ module.exports = class God
     options ?= {}
     @maxAngels = options.maxAngels ? 2  # How many concurrent web workers to use; if set past 8, make up more names
     @maxWorkerPoolSize = options.maxWorkerPoolSize ? 2  # ~20MB per idle worker
+    @workerCode = options.workerCode
     @angels = []
     @firstWorld = true
     Backbone.Mediator.subscribe 'tome:cast-spells', @onTomeCast, @
     @fillWorkerPool = _.throttle @fillWorkerPool, 3000, leading: false
     @fillWorkerPool()
 
-  @worker: '/javascripts/workers/worker_world.js'  #Can be a string or a function.
+  workerCode: '/javascripts/workers/worker_world.js'  #Can be a string or a function.
 
   onTomeCast: (e) ->
     return if @dead
@@ -45,7 +46,7 @@ module.exports = class God
     @createWorker()
 
   createWorker: ->
-    worker = new Worker God.worker
+    worker = new Worker @workerCode
     worker.creationTime = new Date()
     worker.addEventListener 'message', @onWorkerMessage(worker)
     worker
@@ -113,7 +114,7 @@ module.exports = class God
       goals: @goalManager?.getGoals()
     }}
 
-  setGoalManger: (@goalManager) =>
+  setGoalManager: (@goalManager) =>
 
   setWorldClassMap: (@worldClassMap) =>
 
