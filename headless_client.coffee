@@ -288,7 +288,7 @@ $.ajax
 
       commenceSimulationAndSetupCallback: ->
         console.log "Creating World."
-        @god.createWorld @generateSpellsObject()
+        @god.createWorld(@generateSpellsObject())
         Backbone.Mediator.subscribeOnce 'god:infinite-loop', @onInfiniteLoop, @
         Backbone.Mediator.subscribeOnce 'god:goals-calculated', @processResults, @
 
@@ -387,7 +387,6 @@ $.ajax
             killed:
               "Ogre Base": false
             status: "incomplete"
-
 
       generateSpellsObject: ->
         @currentUserCodeMap = @task.generateSpellKeyToSourceMap()

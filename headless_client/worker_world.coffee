@@ -5,11 +5,54 @@
 JASON = require 'jason'
 fs = require 'fs'
 
-#This function runs inside the webworker.
+betterConsole = () ->
+
+  self.logLimit = 200;
+  self.logsLogged = 0;
+
+  self.transferableSupported = () -> true
+
+  self.console = log: ->
+    if self.logsLogged++ is self.logLimit
+      self.postMessage
+        type: "console-log"
+        args: ["Log limit " + self.logLimit + " reached; shutting up."]
+        id: self.workerID
+
+    else if self.logsLogged < self.logLimit
+      args = [].slice.call(arguments)
+      i = 0
+
+      while i < args.length
+        args[i] = args[i].toString()  if args[i].constructor.className is "Thang" or args[i].isComponent  if args[i] and args[i].constructor
+        ++i
+      try
+        self.postMessage
+          type: "console-log"
+          args: args
+          id: self.workerID
+
+      catch error
+        self.postMessage
+          type: "console-log"
+          args: [
+              "Could not post log: " + args
+              error.toString()
+              error.stack
+              error.stackTrace
+          ]
+          id: self.workerID
+
+  # so that we don't crash when debugging statements happen
+  self.console.error = self.console.info = self.console.log
+  GLOBAL.console = console = self.console
+  self.console
+
+
 work = () ->
   console.log "starting..."
 
-  initialized = false;
+  console.log = ->
 
   World = self.require('lib/world/world');
   GoalManager = self.require('lib/world/GoalManager');
@@ -108,10 +151,13 @@ work = () ->
     self[event.data.func] event.data.args
 
   self.postMessage type: "worker-initialized"
-  initialized = true
 
 world = fs.readFileSync "./public/javascripts/world.js", 'utf8'
 
+
+#window.BOX2D_ENABLED = true;
+
+newConsole = "newConsole = #{}JASON.stringify newConsole}()";
 
 ret = """
 
@@ -119,6 +165,8 @@ ret = """
   GLOBAL.window = window;
 
   self.workerID = "Worker";
+
+  console = #{JASON.stringify betterConsole}();
 
   try {
     // the world javascript file
@@ -134,5 +182,13 @@ ret = """
     self.postMessage({"type": "console-log", args: ["An unhandled error occured: ", error.toString(), error.stack], id: -1});
   }
 """
+
+
+#console = #{JASON.stringify createConsole}();
+#
+#  console.error = console.info = console.log;
+#self.console = console;
+#GLOBAL.console = console;
+
 
 module.exports = new Function(ret)

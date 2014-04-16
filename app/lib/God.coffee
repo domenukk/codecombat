@@ -114,6 +114,7 @@ module.exports = class God
       goals: @goalManager?.getGoals()
     }}
 
+  #Coffeescript needs getters and setters.
   setGoalManager: (@goalManager) =>
 
   setWorldClassMap: (@worldClassMap) =>
