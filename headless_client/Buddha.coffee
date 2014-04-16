@@ -5,7 +5,6 @@ World = require 'lib/world/world'
 class Angel
   @cyanide: 0xDEADBEEF
 
-  # https://github.com/codecombat/codecombat/issues/81 -- TODO: we need to wait for worker initialization first
   infiniteLoopIntervalDuration: 7500  # check this often (must be more than the others added)
   infiniteLoopTimeoutDuration: 2500  # wait this long when we check
   abortTimeoutDuration: 500  # give in-process or dying workers this long to give up
