@@ -277,7 +277,7 @@ $.ajax
 
       setupGod: ->
         @god.level = @level.serialize @supermodel
-        @god.setWorldClassMap = @world.classMap
+        @god.setWorldClassMap @world.classMap
         @setupGoalManager()
 
       setupGoalManager: ->

@@ -73,7 +73,7 @@ class Angel
     console.warn "Goal states: " + JSON.stringify(goalStates)
 
     window.BOX2D_ENABLED = false  # Flip this off so that if we have box2d in the namespace, the Collides Components still don't try to create bodies for deserialized Thangs upon attachment
-    World.deserialize serialized, @worldClassMap, @lastSerializedWorldFrames, worldCreation, @finishBeholdingWorld(worldCreation, goalStates)
+    World.deserialize serialized, @shared.worldClassMap, @lastSerializedWorldFrames, worldCreation, @finishBeholdingWorld(worldCreation, goalStates)
     window.BOX2D_ENABLED = true
     @lastSerializedWorldFrames = serialized.frames
 
@@ -203,10 +203,12 @@ module.exports = class God
     for spellKey, spell of spells
       for thangID, spellThang of spell.thangs
         (userCodeMap[thangID] ?= {})[spell.name] = spellThang.aether.serialize()
+
+    console.log userCodeMap
     userCodeMap
 
   createWorld: (spells) ->
-    angel.abort() for angel in @angelsShare.busyAngels
+    angel.abort() for angel in @angelsShare.busyAngels # We really only ever want one world calculated per God
     @angelsShare.workQueue.push
       userCodeMap: @getUserCodeMap(spells)
       level: @level
