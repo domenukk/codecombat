@@ -122,7 +122,7 @@ class Angel
         @worker.postMessage func: 'runWorld', args: @work
         @purgatoryTimer = setInterval @testWorker, @infiniteLoopIntervalDuration
     else
-      console.log "Nobody is working with " + id
+      console.log "Nobody is working with " + @id
       @hireWorker()
 
   abort: =>
@@ -223,3 +223,6 @@ module.exports = class God
     @angelsShare.goalManager?.destroy()
     @angelsShare.goalManager = null
     @angelsShare = null
+
+  #TODO: self.world.totalFrames??
+  #TODO: Don't show arguments.

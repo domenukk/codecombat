@@ -9,7 +9,7 @@ World = require 'lib/world/world'
 
 # tools
 Surface = require 'lib/surface/Surface'
-God = require 'lib/God'
+God = require 'lib/Buddha' # 'lib/God'
 GoalManager = require 'lib/world/GoalManager'
 ScriptManager = require 'lib/scripts/ScriptManager'
 LevelBus = require('lib/LevelBus')

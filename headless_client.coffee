@@ -1,5 +1,5 @@
 debug = false
-testing = true
+testing = false
 
 server = if testing then "http://127.0.0.1:3000" else "http://codecombat.com"
 
@@ -180,7 +180,7 @@ $.ajax
     LevelLoader = require 'lib/LevelLoader'
     GoalManager = require 'lib/world/GoalManager'
 
-    God = require './headless_client/Buddha' # 'lib/God'
+    God = require 'lib/Buddha' # 'lib/God'
 
 
     workerCode = require('./headless_client/worker_world')

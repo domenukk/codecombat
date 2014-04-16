@@ -8,7 +8,7 @@ World = require 'lib/world/world'
 
 # tools
 Surface = require 'lib/surface/Surface'
-God = require 'lib/God'
+God = require 'lib/Buddha' # 'lib/God'
 GoalManager = require 'lib/world/GoalManager'
 ScriptManager = require 'lib/scripts/ScriptManager'
 LevelLoader = require 'lib/LevelLoader'
@@ -465,8 +465,6 @@ module.exports = class SpectateLevelView extends View
           cb("error", jqxhr.statusText)
         else
           cb(null, $.parseJSON(jqxhr.responseText))
-
-  set https://gist.github.com/alexaivars/1599437
 
   destroy: ()->
     @levelLoader?.destroy()
