@@ -27,6 +27,7 @@ class Angel
       @condemnTimeout = _.delay @infinitelyLooped, @infiniteLoopTimeoutDuration
     else
       console.warn "Worker", @id, " hadn't even loaded the scripts yet after", @infiniteLoopIntervalDuration, "ms."
+      @fireWorker()
 
   onWorkerMessage: (event) =>
     console.log JSON.stringify event
@@ -142,22 +143,23 @@ class Angel
     @worker?.removeEventListener 'message', @onWorkerMessage
     @worker?.terminate()
     @worker = null
+    clearInterval @purgatoryTimer
+    console.work "Fired worker."
     @initialized = false
     @work = null
     @hireWorker if rehire
 
   hireWorker: ->
-    clearInterval @purgatoryTimer
-  if @worker
+    if @worker
       @worker.postMessage {func: 'initialized'}
     else
       @worker = new Worker @workerCode
+      console.log "Hiring worker."
       @worker.addEventListener 'message', @onWorkerMessage
 
   kill: ->
     @fireWorker false
     @shared.angels.pop @
-    clearInterval @purgatoryTimer
     @purgatoryTimer = null
 
 module.exports = class God
@@ -189,7 +191,6 @@ module.exports = class God
     Backbone.Mediator.subscribe 'tome:cast-spells', @onTomeCast, @
 
   onTomeCast: (e) ->
-    return if @dead
     @createWorld e.spells
 
   setGoalManager: (goalManager) =>
@@ -207,8 +208,9 @@ module.exports = class God
     console.log userCodeMap
     userCodeMap
 
-  createWorld: (spells) ->
+  createWorld: (spells) =>
     angel.abort() for angel in @angelsShare.busyAngels # We really only ever want one world calculated per God
+    console.log "Level: " + @level
     @angelsShare.workQueue.push
       userCodeMap: @getUserCodeMap(spells)
       level: @level
@@ -216,7 +218,8 @@ module.exports = class God
       goals: @angelsShare.goalManager?.getGoals()
     angel.workIfIdle() for angel in @angelsShare.angels
 
-  destroy: ->
+  destroy: =>
+    @createWorld = -> console.log "CreateWorld already gone."
     @angelsShare.workQueue.push Angel.cyanide
     angel.kill for angel in @angelsShare.busyAngels
     Backbone.Mediator.unsubscribe('tome:cast-spells', @onTomeCast, @)

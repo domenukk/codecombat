@@ -53,7 +53,7 @@ module.exports = class Simulator extends CocoClass
       return
 
     @supermodel ?= new SuperModel()
-    @god = new God maxWorkerPoolSize: 1, maxAngels: 1  # Start loading worker.
+    @god = new God maxAngels: 2  # Start loading worker.
 
     @levelLoader = new LevelLoader supermodel: @supermodel, levelID: levelID, sessionID: @task.getFirstSessionID(), headless: true
     @listenToOnce(@levelLoader, 'loaded-all', @simulateGame)
