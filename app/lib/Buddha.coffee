@@ -6,7 +6,7 @@ class Angel
   @cyanide: 0xDEADBEEF
 
   infiniteLoopIntervalDuration: 7500  # check this often (must be more than the others added)
-  infiniteLoopTimeoutDuration: 2500  # wait this long when we check
+  infiniteLoopTimeoutDuration: 10000  # wait this long when we check
   abortTimeoutDuration: 500  # give in-process or dying workers this long to give up
 
   constructor: (@id, @shared) ->
@@ -24,10 +24,10 @@ class Angel
   testWorker: =>
     if @initialized
       @worker.postMessage {func: 'reportIn'}
-      @condemnTimeout = _.delay @infinitelyLooped, @infiniteLoopTimeoutDuration
+
     else
       console.warn "Worker", @id, " hadn't even loaded the scripts yet after", @infiniteLoopIntervalDuration, "ms."
-      @fireWorker()
+      #@fireWorker()
 
   onWorkerMessage: (event) =>
     console.log JSON.stringify event
@@ -36,6 +36,12 @@ class Angel
       return
 
     switch event.data.type
+      when 'start-load-frames'
+        clearTimeout(@condemnTimeout)
+        @condemnTimeout = _.delay @infinitelyLooped, @infiniteLoopTimeoutDuration
+      when 'end-load-frames'
+        console.log 'No condemn this time.'
+        clearTimeout(@condemnTimeout)
       when 'worker-initialized'
         console.log "Initialized. unless: " + @initialized
         unless @initialized
@@ -71,7 +77,7 @@ class Angel
       @running = false
       @shared.busyAngels.pop @
 
-    console.warn "Goal states: " + JSON.stringify(goalStates)
+    # console.warn "Goal states: " + JSON.stringify(goalStates)
 
     window.BOX2D_ENABLED = false  # Flip this off so that if we have box2d in the namespace, the Collides Components still don't try to create bodies for deserialized Thangs upon attachment
     World.deserialize serialized, @shared.worldClassMap, @lastSerializedWorldFrames, worldCreation, @finishBeholdingWorld(worldCreation, goalStates)
@@ -121,6 +127,7 @@ class Angel
         @shared.busyAngels.push @
         #console.log "going to run world with code", @getUserCodeMap()
         @worker.postMessage func: 'runWorld', args: @work
+        console.log "Setting interval."
         @purgatoryTimer = setInterval @testWorker, @infiniteLoopIntervalDuration
     else
       console.log "Nobody is working with " + @id
@@ -136,7 +143,7 @@ class Angel
       @aborting = true
       @work = null
 
-  fireWorker: (rehire=true) ->
+  fireWorker: (rehire=true) =>
     @aborting = false
     @running = false
     @shared.busyAngels.pop @
@@ -144,10 +151,10 @@ class Angel
     @worker?.terminate()
     @worker = null
     clearInterval @purgatoryTimer
-    console.work "Fired worker."
+    console.log "Fired worker."
     @initialized = false
     @work = null
-    @hireWorker if rehire
+    @hireWorker() if rehire
 
   hireWorker: ->
     if @worker
@@ -219,6 +226,7 @@ module.exports = class God
     angel.workIfIdle() for angel in @angelsShare.angels
 
   destroy: =>
+    console.log "Destroying Buddha"
     @createWorld = -> console.log "CreateWorld already gone."
     @angelsShare.workQueue.push Angel.cyanide
     angel.kill for angel in @angelsShare.busyAngels

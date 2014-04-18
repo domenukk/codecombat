@@ -1,5 +1,5 @@
 debug = false
-testing = false
+testing = true
 
 server = if testing then "http://127.0.0.1:3000" else "http://codecombat.com"
 

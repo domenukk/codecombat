@@ -11,7 +11,7 @@ module.exports = class Level extends CocoModel
     o = _.cloneDeep @attributes  # slow in level editor when there are hundreds of Thangs
 
 
-    console.warn "Attributes: " + JSON.stringify(@attributes)
+    #console.warn "Attributes: " + JSON.stringify(@attributes)
 
     # Figure out Components
     o.levelComponents = _.cloneDeep (lc.attributes for lc in supermodel.getModels LevelComponent)

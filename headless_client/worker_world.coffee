@@ -65,6 +65,8 @@ work = () ->
     self.postedErrors = false
     self.logsLogged = 0
 
+
+
     try
       self.world = new World(args.worldName, args.userCodeMap)
       self.world.loadFromLevel args.level, true  if args.level
@@ -74,15 +76,20 @@ work = () ->
       self.goalManager.worldGenerationWillBegin()
       self.world.setGoalManager self.goalManager
     catch error
-      console.log "There has been an error inside thew worker."
+      console.log "There has been an error inside the worker."
       self.onWorldError error
       return
     Math.random = self.world.rand.randf # so user code is predictable
     console.log "Loading frames."
+
+    self.postMessage type: "start-load-frames"
+
+
     self.world.loadFrames self.onWorldLoaded, self.onWorldError, self.onWorldLoadProgress, true
 
 
   self.onWorldLoaded = onWorldLoaded = ->
+    self.postMessage type: "end-load-frames"
 
     self.goalManager.worldGenerationEnded()
     t1 = new Date()
@@ -116,6 +123,7 @@ work = () ->
     self.world = null
 
   self.onWorldError = onWorldError = (error) ->
+    self.postMessage type: "end-load-frames"
     if error instanceof Aether.problems.UserCodeProblem
       #console.log "Aether userCodeProblem occured."
       unless self.postedErrors[error.key]
