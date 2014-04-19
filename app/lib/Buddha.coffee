@@ -113,11 +113,12 @@ class Angel
     return if @aborted
     console.log @id + ": is initialized: " + @initialized + ", workQueue.lenght: " + @shared.workQueue.length
     if @initialized and @shared.workQueue.length
-      @work = @shared.workQueue.pop()
+      work = @shared.workQueue.pop()
 
-      console.warn JSON.stringify(@work)
+      console.warn JSON.stringify(work)
 
-      if @work is Angel.cyanide # Kill all other Angels, too
+
+      if work is Angel.cyanide # Kill all other Angels, too
         console.log @id + ": 'work is poison'"
         @shared.workQueue.push Angel.cyanide
         @free()
@@ -126,8 +127,9 @@ class Angel
         @running = true
         @shared.busyAngels.push @
         #console.log "going to run world with code", @getUserCodeMap()
-        @worker.postMessage func: 'runWorld', args: @work
+        worker.postMessage func: 'runWorld', args: work
         console.log "Setting interval."
+        clearTimeout @purgatoryTimer
         @purgatoryTimer = setInterval @testWorker, @infiniteLoopIntervalDuration
     else
       console.log "Nobody is working with " + @id
@@ -150,6 +152,7 @@ class Angel
     @worker?.removeEventListener 'message', @onWorkerMessage
     @worker?.terminate()
     @worker = null
+    clearTimeout @condemnTimeout
     clearInterval @purgatoryTimer
     console.log "Fired worker."
     @initialized = false
@@ -167,7 +170,10 @@ class Angel
   kill: ->
     @fireWorker false
     @shared.angels.pop @
+    clearTimeout @condemnTimeout
+    clearTimeout @purgatoryTimer
     @purgatoryTimer = null
+    @condemnTimeout = null
 
 module.exports = class God
   ids: ['Athena', 'Baldr', 'Crom', 'Dagr', 'Eris', 'Freyja', 'Great Gish', 'Hades', 'Ishtar', 'Janus', 'Khronos', 'Loki', 'Marduk', 'Negafook', 'Odin', 'Poseidon', 'Quetzalcoatl', 'Ra', 'Shiva', 'Thor', 'Umvelinqangi', 'Týr', 'Vishnu', 'Wepwawet', 'Xipe Totec', 'Yahweh', 'Zeus', '上帝', 'Tiamat', '盘古', 'Phoebe', 'Artemis', 'Osiris', "嫦娥", 'Anhur', 'Teshub', 'Enlil', 'Perkele', 'Chaos', 'Hera', 'Iris', 'Theia', 'Uranus', 'Stribog', 'Sabazios', 'Izanagi', 'Ao', 'Tāwhirimātea', 'Tengri', 'Inmar', 'Torngarsuk', 'Centzonhuitznahua', 'Hunab Ku', 'Apollo', 'Helios', 'Thoth', 'Hyperion', 'Alectrona', 'Eos', 'Mitra', 'Saranyu', 'Freyr', 'Koyash', 'Atropos', 'Clotho', 'Lachesis', 'Tyche', 'Skuld', 'Urðr', 'Verðandi', 'Camaxtli', 'Huhetotl', 'Set', 'Anu', 'Allah', 'Anshar', 'Hermes', 'Lugh', 'Brigit', 'Manannan Mac Lir', 'Persephone', 'Mercury', 'Venus', 'Mars', 'Azrael', 'He-Man', 'Anansi', 'Issek', 'Mog', 'Kos', 'Amaterasu Omikami', 'Raijin', 'Susanowo', 'Blind Io', 'The Lady', 'Offler', 'Ptah', 'Anubis', 'Ereshkigal', 'Nergal', 'Thanatos', 'Macaria', 'Angelos', 'Erebus', 'Hecate', 'Hel', 'Orcus', 'Ishtar-Deela Nakh', 'Prometheus', 'Hephaestos', 'Sekhmet', 'Ares', 'Enyo', 'Otrera', 'Pele', 'Hadúr', 'Hachiman', 'Dayisun Tngri', 'Ullr', 'Lua', 'Minerva']
