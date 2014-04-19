@@ -57,6 +57,14 @@ work = () ->
   World = self.require('lib/world/world');
   GoalManager = self.require('lib/world/GoalManager');
 
+  self.cleanUp ->
+  self.world = null
+  self.goalManager = null
+  self.postedErrors = {}
+  self.t0 = null
+  self.firstWorld = null
+  self.logsLogged = 0
+
   self.runWorld = (args) ->
     console.log "Running world inside worker."
     self.postedErrors = {}
@@ -64,8 +72,6 @@ work = () ->
     self.firstWorld = args.firstWorld
     self.postedErrors = false
     self.logsLogged = 0
-
-
 
     try
       self.world = new World(args.worldName, args.userCodeMap)
@@ -120,7 +126,8 @@ work = () ->
       console.log "World delivery error:", error.toString() + "\n" + error.stack or error.stackTrace
     t3 = new Date()
     console.log "And it was so: (" + (diff / self.world.totalFrames).toFixed(3) + "ms per frame,", self.world.totalFrames, "frames)\nSimulation   :", diff + "ms \nSerialization:", (t2 - t1) + "ms\nDelivery     :", (t3 - t2) + "ms"
-    self.world = null
+    self.cleanUp()
+
 
   self.onWorldError = onWorldError = (error) ->
     self.postMessage type: "end-load-frames"
@@ -135,6 +142,7 @@ work = () ->
         self.postedErrors[error.key] = problem
     else
       console.log "Non-UserCodeError:", error.toString() + "\n" + error.stack or error.stackTrace
+    self.cleanUp()
 
   self.onWorldLoadProgress = onWorldLoadProgress = (progress) ->
     #console.log "Worker onWorldLoadProgress"
@@ -149,6 +157,7 @@ work = () ->
       self.world.abort()  if typeof self.world isnt "undefined"
       self.world = null
     self.postMessage type: "abort"
+    self.cleanUp()
 
   self.reportIn = reportIn = ->
     console.log "Reporting in."

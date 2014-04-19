@@ -1,5 +1,8 @@
 debug = false
 testing = true
+exitOnLeak = true
+
+heapdump = require('heapdump'); #TODO: Remove.
 
 server = if testing then "http://127.0.0.1:3000" else "http://codecombat.com"
 
@@ -44,7 +47,7 @@ GLOBAL.navigator =
   opera: false
 
 store = {}
-GLOBAL.localStorage = 
+GLOBAL.localStorage =
     getItem: (key) => store[key]
     setItem: (key, s) => store[key] = s
     removeItem: (key) => delete store[key]
@@ -213,8 +216,15 @@ $.ajax
         if testing
           test = require './test.js'
           console.log test
+          if @ranonce
+            console.log "Writing snapshot."
+            heapdump.writeSnapshot()
+
+          @ranonce = true
+
           sim.setupSimulationAndLoadLevel test, "Testing...", status: 400
           return
+
 
         @trigger 'statusUpdate', 'Fetching simulation data!'
         $.ajax
@@ -304,6 +314,35 @@ $.ajax
         @god.createWorld(@generateSpellsObject())
         Backbone.Mediator.subscribeOnce 'god:infinite-loop', @onInfiniteLoop, @
         Backbone.Mediator.subscribeOnce 'god:goals-calculated', @processResults, @
+
+        #Search for leaks
+        if testing and not @memwatch? and false
+          leakcount = 0
+          maxleakcount = 0
+          heapdump = require('heapdump');
+          console.log "Setting leak callbacks."
+          @memwatch = require 'memwatch'
+
+          @memwatch.on 'leak', (info) =>
+            console.warn "LEAK!!\n" + JSON.stringify(info)
+            heapdump.writeSnapshot()
+
+            unless @hd?
+              if (leakcount++ is maxleakcount)
+                @hd = new @memwatch.HeapDiff()
+
+                @memwatch.on 'stats', (stats) =>
+                  heapdump.writeSnapshot()
+                  console.warn "stats callback: " + stats
+                  diff = @hd.end()
+                  console.warn "HeapDiff:\n" + JSON.stringify(diff)
+
+                  if exitOnLeak
+                    console.warn "Exiting because of Leak."
+                    process.exit()
+                  @hd = new @memwatch.HeapDiff()
+
+
 
       onInfiniteLoop: ->
         console.warn "Skipping infinitely looping game."
