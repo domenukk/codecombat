@@ -62,7 +62,6 @@ module.exports = class God
           console.warn "Received strange word from God: #{event.data.type}"
     worker.onMessage
 
-
   getAngel: ->
     freeAngel = null
     for angel in @angels
@@ -93,7 +92,7 @@ module.exports = class God
     #console.log "UserCodeProblem:", '"' + problem.message + '"', "for", problem.userInfo.thangID, "-", problem.userInfo.methodName, 'at line', problem.ranges?[0][0][0], 'column', problem.ranges?[0][0][1]
     Backbone.Mediator.publish 'god:user-code-problem', problem: problem
 
-  createWorld: (@spells) ->
+  createWorld: (spells) ->
     #console.log @id + ': "Let there be light upon', @world.name + '!"'
     unless Worker?  # profiling world simulation is easier on main thread, or we are IE9
       setTimeout @simulateWorld, 1
@@ -108,7 +107,7 @@ module.exports = class God
     #console.log "going to run world with code", @getUserCodeMap()
     angel.worker.postMessage {func: 'runWorld', args: {
       worldName: @level.name
-      userCodeMap: @getUserCodeMap()
+      userCodeMap: @getUserCodeMap(spells)
       level: @level
       firstWorld: @firstWorld
       goals: @goalManager?.getGoals()
@@ -138,7 +137,7 @@ module.exports = class God
     console.warn "Goal states: " + JSON.stringify(goalStates)
 
     window.BOX2D_ENABLED = false  # Flip this off so that if we have box2d in the namespace, the Collides Components still don't try to create bodies for deserialized Thangs upon attachment
-    World.deserialize serialized, @worldClassMap, @lastSerializedWorldFrames, worldCreation, @finishBeholdingWorld
+    World.deserialize serialized, @worldClassMap, @lastSerializedWorldFrames, @finishBeholdingWorld
     window.BOX2D_ENABLED = true
     @lastSerializedWorldFrames = serialized.frames
 
@@ -195,7 +194,7 @@ module.exports = class God
     @latestGoalStates = @testGM?.getGoalStates()
     serialized = @testWorld.serialize().serializedWorld
     window.BOX2D_ENABLED = false
-    World.deserialize serialized, @worldClassMap, @lastSerializedWorldFrames, @t0, @finishBeholdingWorld
+    World.deserialize serialized, @worldClassMap, @lastSerializedWorldFrames, @finishBeholdingWorld
     window.BOX2D_ENABLED = true
     @lastSerializedWorldFrames = serialized.frames
 
@@ -315,5 +314,3 @@ class Angel
         clearTimeout @condemnTimeout
       else
         console.log "Unsupported message:", event.data
-
-

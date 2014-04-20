@@ -1,8 +1,8 @@
 debug = false
-testing = false
+testing = true
 leaktest = false
 exitOnLeak = false
-heapdump = false
+heapdump = true
 
 heapdump = require('heapdump') if heapdump
 
@@ -221,7 +221,7 @@ $.ajax
           _.delay @setupSimulationAndLoadLevel, 0, test, "Testing...", status: 400
           return
 
-        if @ranonce and heapdump
+        if @ranonce and heapdump?
           console.log "Writing snapshot."
           heapdump.writeSnapshot()
         @ranonce = true
@@ -319,20 +319,17 @@ $.ajax
         if leaktest and not @memwatch?
           leakcount = 0
           maxleakcount = 0
-          heapdump = require('heapdump');
           console.log "Setting leak callbacks."
           @memwatch = require 'memwatch'
 
           @memwatch.on 'leak', (info) =>
             console.warn "LEAK!!\n" + JSON.stringify(info)
-            heapdump.writeSnapshot()
 
             unless @hd?
               if (leakcount++ is maxleakcount)
                 @hd = new @memwatch.HeapDiff()
 
                 @memwatch.on 'stats', (stats) =>
-                  heapdump.writeSnapshot()
                   console.warn "stats callback: " + stats
                   diff = @hd.end()
                   console.warn "HeapDiff:\n" + JSON.stringify(diff)

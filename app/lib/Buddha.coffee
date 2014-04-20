@@ -2,6 +2,10 @@
 {now} = require 'lib/world/world_utils'
 World = require 'lib/world/world'
 
+###
+  Every Angel has exactly one WebWorker attached to it.
+  It will call methods inside the webwrker and kill it if it times out.
+###
 class Angel
   @cyanide: 0xDEADBEEF
 
@@ -80,29 +84,29 @@ class Angel
     # console.warn "Goal states: " + JSON.stringify(goalStates)
 
     window.BOX2D_ENABLED = false  # Flip this off so that if we have box2d in the namespace, the Collides Components still don't try to create bodies for deserialized Thangs upon attachment
-    World.deserialize serialized, @shared.worldClassMap, @lastSerializedWorldFrames, worldCreation, @finishBeholdingWorld(worldCreation, goalStates)
+    World.deserialize serialized, @shared.worldClassMap, @lastSerializedWorldFrames, @finishBeholdingWorld(goalStates)
     window.BOX2D_ENABLED = true
     @lastSerializedWorldFrames = serialized.frames
 
-  finishBeholdingWorld: (worldCreation, goalStates) => (world) =>
+  finishBeholdingWorld: (goalStates) => (world) =>
     return if @aborting
-    firstWorld = not @shared.world?
     world.findFirstChangedFrame @shared.world
     @shared.world = world
     errorCount = (t for t in @shared.world.thangs when t.errorsOut).length
-    Backbone.Mediator.publish('god:new-world-created', world: world, firstWorld: firstWorld, errorCount: errorCount, goalStates: goalStates)
+    Backbone.Mediator.publish('god:new-world-created', world: world, firstWorld: @shared.firstWorld, errorCount: errorCount, goalStates: goalStates)
     for scriptNote in @shared.world.scriptNotes
       Backbone.Mediator.publish scriptNote.channel, scriptNote.event
-    @shared.goalManager?.world = newWorld
+    @shared.goalManager?.world = world
     @running = false
     @shared.busyAngels.pop @
+    @shared.firstWorld = false;
     @doWork()
 
   infinitelyLooped: =>
     unless @aborting
       problem = type: "runtime", level: "error", id: "runtime_InfiniteLoop", message: "Code never finished. It's either really slow or has an infinite loop."
       Backbone.Mediator.publish 'god:user-code-problem', problem: problem
-      Backbone.Mediator.publish 'god:infinite-loop', firstWorld: @shared.world?
+      Backbone.Mediator.publish 'god:infinite-loop', firstWorld: @shared.firstWorld
       @fireWorker()
 
   workIfIdle: ->
@@ -114,10 +118,6 @@ class Angel
     console.log @id + ": is initialized: " + @initialized + ", workQueue.lenght: " + @shared.workQueue.length
     if @initialized and @shared.workQueue.length
       work = @shared.workQueue.pop()
-
-      console.warn JSON.stringify(work)
-
-
       if work is Angel.cyanide # Kill all other Angels, too
         console.log @id + ": 'work is poison'"
         @shared.workQueue.push Angel.cyanide
@@ -141,7 +141,7 @@ class Angel
       @running = false
       @shared.busyAngels.pop @
       @abortTimeout = _.delay @terminate, @fireWorker, @abortTimeoutDuration
-      @worker.postMessage {func: 'abort'}
+      @worker.postMessage func: 'abort'
       @aborting = true
       @work = null
 
@@ -160,12 +160,11 @@ class Angel
     @hireWorker() if rehire
 
   hireWorker: ->
-    if @worker
-      @worker.postMessage {func: 'initialized'}
-    else
+    unless @worker
       @worker = new Worker @workerCode
       console.log "Hiring worker."
       @worker.addEventListener 'message', @onWorkerMessage
+    #@worker.postMessage func: 'initialized' else
 
   kill: ->
     @fireWorker false
@@ -185,6 +184,7 @@ module.exports = class God
   angelsShare: {
     workerCode: '/javascripts/workers/worker_world.js' # Either path or function
     workQueue: []
+    firstWorld: true
     world: undefined
     goalManager: undefined
     worldClassMap: undefined
@@ -225,9 +225,9 @@ module.exports = class God
     angel.abort() for angel in @angelsShare.busyAngels # We really only ever want one world calculated per God
     console.log "Level: " + @level
     @angelsShare.workQueue.push
+      worldName: @level.name
       userCodeMap: @getUserCodeMap(spells)
       level: @level
-      firstWorld: @angelsShare.world?
       goals: @angelsShare.goalManager?.getGoals()
     angel.workIfIdle() for angel in @angelsShare.angels
 

@@ -341,7 +341,7 @@ module.exports = class World
       console.log "Whoa, serializing a lot of WorldScriptNotes here:", o.scriptNotes.length
     {serializedWorld: o, transferableObjects: [o.storageBuffer]}
 
-  @deserialize: (o, classMap, oldSerializedWorldFrames, worldCreationTime, finishedWorldCallback) ->
+  @deserialize: (o, classMap, oldSerializedWorldFrames, finishedWorldCallback) ->
     # Code hotspot; optimize it
     #console.log "Deserializing", o, "length", JSON.stringify(o).length
     #console.log JSON.stringify(o)

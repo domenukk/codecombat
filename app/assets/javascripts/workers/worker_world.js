@@ -109,6 +109,8 @@ self.runWorld = function runWorld(args) {
 };
 
 self.onWorldLoaded = function onWorldLoaded() {
+    console.log("self.world: " + self.world);
+
   self.goalManager.worldGenerationEnded();
   var t1 = new Date();
   var diff = t1 - self.t0;

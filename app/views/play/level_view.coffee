@@ -9,10 +9,10 @@ World = require 'lib/world/world'
 
 # tools
 Surface = require 'lib/surface/Surface'
-God = require 'lib/Buddha' # 'lib/God'
+God = require 'lib/Buddha'
 GoalManager = require 'lib/world/GoalManager'
 ScriptManager = require 'lib/scripts/ScriptManager'
-LevelBus = require('lib/LevelBus')
+LevelBus = require 'lib/LevelBus'
 LevelLoader = require 'lib/LevelLoader'
 LevelSession = require 'models/LevelSession'
 Level = require 'models/Level'
@@ -112,7 +112,6 @@ module.exports = class PlayLevelView extends View
     @listenToOnce(@levelLoader, 'loaded-all', @onLevelLoaderLoaded)
     @listenTo(@levelLoader, 'progress', @onLevelLoaderProgressChanged)
 
-
   getRenderData: ->
     c = super()
     c.world = @world
@@ -161,9 +160,6 @@ module.exports = class PlayLevelView extends View
     @grabLevelLoaderData()
     team = @getQueryVariable("team") ? @world.teamForPlayer(0)
     @loadOpponentTeam(team)
-
-    console.log "God: " + @god
-
     @god.level = @level.serialize @supermodel
     @god.setWorldClassMap @world.classMap
     @setTeam team

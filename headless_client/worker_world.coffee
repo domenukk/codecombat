@@ -62,14 +62,12 @@ work = () ->
     self.goalManager = null
     self.postedErrors = {}
     self.t0 = null
-    self.firstWorld = null
     self.logsLogged = 0
 
   self.runWorld = (args) ->
     console.log "Running world inside worker."
     self.postedErrors = {}
     self.t0 = new Date()
-    self.firstWorld = args.firstWorld
     self.postedErrors = false
     self.logsLogged = 0
 
