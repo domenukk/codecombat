@@ -2,7 +2,7 @@ SuperModel = require 'models/SuperModel'
 CocoClass = require 'lib/CocoClass'
 LevelLoader = require 'lib/LevelLoader'
 GoalManager = require 'lib/world/GoalManager'
-God = require 'lib/God'
+God = require 'lib/Buddha'
 
 module.exports = class Simulator extends CocoClass
 

@@ -28,13 +28,10 @@ class Angel
   testWorker: =>
     if @initialized
       @worker.postMessage {func: 'reportIn'}
-
-    else
-      console.warn "Worker", @id, " hadn't even loaded the scripts yet after", @infiniteLoopIntervalDuration, "ms."
-      #@fireWorker()
+      # Are there any errors when webworker isn't loaded properly?
 
   onWorkerMessage: (event) =>
-    console.log JSON.stringify event
+    #console.log JSON.stringify event
     if @aborting and not event.data.type is 'abort'
       console.log id + " is currently aborting old work."
       return
@@ -113,9 +110,9 @@ class Angel
     @doWork() unless @running
 
   doWork: =>
-    console.log "work."
+    #console.log "work."
     return if @aborted
-    console.log @id + ": is initialized: " + @initialized + ", workQueue.lenght: " + @shared.workQueue.length
+    #console.log @id + ": is initialized: " + @initialized + ", workQueue.lenght: " + @shared.workQueue.length
     if @initialized and @shared.workQueue.length
       work = @shared.workQueue.pop()
       if work is Angel.cyanide # Kill all other Angels, too
@@ -218,7 +215,7 @@ module.exports = class God
       for thangID, spellThang of spell.thangs
         (userCodeMap[thangID] ?= {})[spell.name] = spellThang.aether.serialize()
 
-    console.log userCodeMap
+    #console.log userCodeMap
     userCodeMap
 
   createWorld: (spells) =>
