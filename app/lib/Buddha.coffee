@@ -14,16 +14,15 @@ class Angel
   abortTimeoutDuration: 500  # give in-process or dying workers this long to give up
 
   constructor: (@id, @shared) ->
+    console.log "Creating Angel"
     if (navigator.userAgent or navigator.vendor or window.opera).search("MSIE") isnt -1
       @infiniteLoopIntervalDuration *= 20  # since it's so slow to serialize without transferable objects, we can't trust it
       @infiniteLoopTimeoutDuration *= 20
       @abortTimeoutDuration *= 10
     @initialized = false
     @running = false
+    @hireWorker()
     @shared.angels.push @
-    @worker = new Worker @shared.workerCode
-    @worker.addEventListener 'message', @onWorkerMessage
-    @worker.creationTime = new Date()
 
   testWorker: =>
     if @initialized
@@ -112,7 +111,7 @@ class Angel
   doWork: =>
     #console.log "work."
     return if @aborted
-    #console.log @id + ": is initialized: " + @initialized + ", workQueue.lenght: " + @shared.workQueue.length
+    console.log @id + " ready and looking for work. WorkQueue lenght is " + @shared.workQueue.length
     if @initialized and @shared.workQueue.length
       work = @shared.workQueue.pop()
       if work is Angel.cyanide # Kill all other Angels, too
@@ -158,8 +157,8 @@ class Angel
 
   hireWorker: ->
     unless @worker
-      @worker = new Worker @workerCode
       console.log "Hiring worker."
+      @worker = new Worker @shared.workerCode
       @worker.addEventListener 'message', @onWorkerMessage
     #@worker.postMessage func: 'initialized' else
 
@@ -197,7 +196,7 @@ module.exports = class God
     # ~20MB per idle worker + angel overhead - in this implementation, every Angel maps to 1 worker
     angelCount = options.maxAngels ? options.maxWorkerPoolSize ? 2  # How many concurrent Angels/web workers to use at a time
 
-    new Angel(@nextID(), @angelsShare) for i in [0...angelCount]
+    _.delay (=>new Angel @nextID(), @angelsShare), 250 * i for i in [0...angelCount] # Don't generate all Angels at once.
     Backbone.Mediator.subscribe 'tome:cast-spells', @onTomeCast, @
 
   onTomeCast: (e) ->
@@ -220,7 +219,7 @@ module.exports = class God
 
   createWorld: (spells) =>
     angel.abort() for angel in @angelsShare.busyAngels # We really only ever want one world calculated per God
-    console.log "Level: " + @level
+    #console.log "Level: " + @level
     @angelsShare.workQueue.push
       worldName: @level.name
       userCodeMap: @getUserCodeMap(spells)
