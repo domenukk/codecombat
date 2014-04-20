@@ -57,13 +57,13 @@ work = () ->
   World = self.require('lib/world/world');
   GoalManager = self.require('lib/world/GoalManager');
 
-  self.cleanUp ->
-  self.world = null
-  self.goalManager = null
-  self.postedErrors = {}
-  self.t0 = null
-  self.firstWorld = null
-  self.logsLogged = 0
+  self.cleanUp = ->
+    self.world = null
+    self.goalManager = null
+    self.postedErrors = {}
+    self.t0 = null
+    self.firstWorld = null
+    self.logsLogged = 0
 
   self.runWorld = (args) ->
     console.log "Running world inside worker."

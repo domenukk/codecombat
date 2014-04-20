@@ -127,7 +127,7 @@ class Angel
         @running = true
         @shared.busyAngels.push @
         #console.log "going to run world with code", @getUserCodeMap()
-        worker.postMessage func: 'runWorld', args: work
+        @worker.postMessage func: 'runWorld', args: work
         console.log "Setting interval."
         clearTimeout @purgatoryTimer
         @purgatoryTimer = setInterval @testWorker, @infiniteLoopIntervalDuration

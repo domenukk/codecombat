@@ -1,8 +1,10 @@
 debug = false
-testing = true
-exitOnLeak = true
+testing = false
+leaktest = false
+exitOnLeak = false
+heapdump = false
 
-heapdump = require('heapdump'); #TODO: Remove.
+heapdump = require('heapdump') if heapdump
 
 server = if testing then "http://127.0.0.1:3000" else "http://codecombat.com"
 
@@ -216,15 +218,13 @@ $.ajax
         if testing
           test = require './test.js'
           console.log test
-          if @ranonce
-            console.log "Writing snapshot."
-            heapdump.writeSnapshot()
-
-          @ranonce = true
-
-          sim.setupSimulationAndLoadLevel test, "Testing...", status: 400
+          _.delay @setupSimulationAndLoadLevel, 0, test, "Testing...", status: 400
           return
 
+        if @ranonce and heapdump
+          console.log "Writing snapshot."
+          heapdump.writeSnapshot()
+        @ranonce = true
 
         @trigger 'statusUpdate', 'Fetching simulation data!'
         $.ajax
@@ -316,7 +316,7 @@ $.ajax
         Backbone.Mediator.subscribeOnce 'god:goals-calculated', @processResults, @
 
         #Search for leaks
-        if testing and not @memwatch? and false
+        if leaktest and not @memwatch?
           leakcount = 0
           maxleakcount = 0
           heapdump = require('heapdump');
