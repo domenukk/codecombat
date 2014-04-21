@@ -2,7 +2,7 @@ debug = false
 testing = false
 leaktest = false
 exitOnLeak = false
-heapdump = true
+heapdump = false
 
 heapdump = require('heapdump') if heapdump
 
@@ -16,6 +16,7 @@ disable = [
 ]
 
 bowerComponents = "./bower_components/"
+headlessClient = "./headless_client/"
 
 # the path used for the loader. __dirname is module dependent.
 path = __dirname
@@ -188,7 +189,7 @@ $.ajax
 
     God = require 'lib/Buddha' # 'lib/God'
 
-    workerCode = require('./headless_client/worker_world')
+    workerCode = require headlessClient + 'worker_world')
 
     SuperModel = require 'models/SuperModel'
 
@@ -216,7 +217,7 @@ $.ajax
         return if @destroyed
 
         if testing
-          test = require './test.js'
+          test = require headlessClient + 'test.js'
           console.log test
           _.delay @setupSimulationAndLoadLevel, 0, test, "Testing...", status: 400
           return
