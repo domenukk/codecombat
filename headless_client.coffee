@@ -1,4 +1,4 @@
-debug = false
+debug = true
 testing = true
 leaktest = false
 exitOnLeak = false
@@ -148,11 +148,11 @@ do (setupLodash = this) ->
 
 # load Backbone. Needs hooked loader to reroute underscore to lodash.
 hook()
-GLOBAL.Backbone = require('./bower_components/backbone/backbone')
+GLOBAL.Backbone = require bowerComponents + 'backbone/backbone'
 unhook()
 Backbone.$ = $
 
-require './vendor/scripts/backbone-mediator'
+require bowerComponents + 'validated-backbone-mediator/backbone-mediator'
 # Instead of mediator, dummy might be faster yet suffice?
 #Mediator = class Mediator
 #  publish: (id, object) ->
@@ -179,14 +179,13 @@ $.ajax
     console.log "User: " + response
     GLOBAL.window.userObject = response # JSON.parse response
 
-    User = require './app/models/User'
+    User = require 'models/User'
 
     World = require 'lib/world/world'
     LevelLoader = require 'lib/LevelLoader'
     GoalManager = require 'lib/world/GoalManager'
 
     God = require 'lib/Buddha' # 'lib/God'
-
 
     workerCode = require('./headless_client/worker_world')
 

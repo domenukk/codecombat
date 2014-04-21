@@ -84,6 +84,7 @@ var World = self.require('lib/world/world');
 var GoalManager = self.require('lib/world/GoalManager');
 
 self.runWorld = function runWorld(args) {
+    console.log("Received message to run frames.")
   self.postedErrors = {};
   self.t0 = new Date();
   self.firstWorld = args.firstWorld;
@@ -105,11 +106,13 @@ self.runWorld = function runWorld(args) {
     return;
   }
   Math.random = self.world.rand.randf;  // so user code is predictable
+  console.log("Loading frames");
+  console.log(JSON.stringify world);
   self.world.loadFrames(self.onWorldLoaded, self.onWorldError, self.onWorldLoadProgress);
 };
 
 self.onWorldLoaded = function onWorldLoaded() {
-    console.log("self.world: " + self.world);
+  console.log("Loading frames finished. self.world: " + self.world);
 
   self.goalManager.worldGenerationEnded();
   var t1 = new Date();

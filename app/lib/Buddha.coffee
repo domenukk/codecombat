@@ -14,7 +14,7 @@ class Angel
   abortTimeoutDuration: 500  # give in-process or dying workers this long to give up
 
   constructor: (@id, @shared) ->
-    console.log "Creating Angel"
+    console.log @id + ": Creating Angel"
     if (navigator.userAgent or navigator.vendor or window.opera).search("MSIE") isnt -1
       @infiniteLoopIntervalDuration *= 20  # since it's so slow to serialize without transferable objects, we can't trust it
       @infiniteLoopTimeoutDuration *= 20
@@ -31,7 +31,8 @@ class Angel
 
   onWorkerMessage: (event) =>
     #console.log JSON.stringify event
-    if @aborting and not event.data.type is 'abort'
+    if @aborting and not
+    event.data.type is 'abort'
       console.log id + " is currently aborting old work."
       return
 
@@ -40,12 +41,11 @@ class Angel
         clearTimeout(@condemnTimeout)
         @condemnTimeout = _.delay @infinitelyLooped, @infiniteLoopTimeoutDuration
       when 'end-load-frames'
-        console.log 'No condemn this time.'
+        console.log @id + ': No condemn this time.'
         clearTimeout(@condemnTimeout)
       when 'worker-initialized'
-        console.log "Initialized. unless: " + @initialized
         unless @initialized
-          console.log "Worker initialized after", ((new Date()) - @worker.creationTime), "ms"
+          console.log @id + ": Worker initialized after", ((new Date()) - @worker.creationTime), "ms"
           @initialized = true
           @doWork()
       when 'new-world'
@@ -66,7 +66,7 @@ class Angel
       when 'reportIn'
         clearTimeout @condemnTimeout
       else
-        console.log "Unsupported message:", event.data
+        console.log @id + " received unsupported message:", event.data
 
   beholdWorld: (serialized, goalStates) ->
     return if @aborting
@@ -119,12 +119,13 @@ class Angel
         @shared.workQueue.push Angel.cyanide
         @free()
       else
-        console.log "Sending the worker to work."
+        console.log @id + ": Sending the worker to work."
         @running = true
         @shared.busyAngels.push @
-        #console.log "going to run world with code", @getUserCodeMap()
+
+        console.log "Running world..."
         @worker.postMessage func: 'runWorld', args: work
-        console.log "Setting interval."
+        console.log @id + ": Setting interval."
         clearTimeout @purgatoryTimer
         @purgatoryTimer = setInterval @testWorker, @infiniteLoopIntervalDuration
     else
