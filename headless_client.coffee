@@ -1,5 +1,5 @@
-debug = true
-testing = true
+debug = false
+testing = false
 leaktest = false
 exitOnLeak = false
 heapdump = true
@@ -12,6 +12,7 @@ server = if testing then "http://127.0.0.1:3000" else "http://codecombat.com"
 disable = [
   'lib/AudioPlayer'
   'locale/locale'
+  '../locale/locale'
 ]
 
 bowerComponents = "./bower_components/"
@@ -126,7 +127,7 @@ $.ajax = (options) ->
       responded = true
 
 $.extend = (deep, into, from) ->
-  copy = clone(from, deep);
+  copy = _.clone(from, deep);
   if into
     _.assign into, copy
     copy = into
