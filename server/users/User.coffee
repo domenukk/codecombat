@@ -1,5 +1,5 @@
 mongoose = require('mongoose')
-jsonschema = require('./user_schema')
+jsonschema = require('../../app/schemas/models/user')
 crypto = require('crypto')
 {salt, isProduction} = require('../../server_config')
 mail = require '../commons/mail'
@@ -62,7 +62,7 @@ UserSchema.statics.updateMailChimp = (doc, callback) ->
     doc.updatedMailChimp = true
     callback?()
 
-  mc.lists.subscribe params, onSuccess, onFailure
+  mc?.lists.subscribe params, onSuccess, onFailure
 
 
 UserSchema.pre('save', (next) ->
