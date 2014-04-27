@@ -101,7 +101,6 @@ module.exports = class World
           continueFn()
         else
           setTimeout(continueFn, 0)
-        setTimeout((=> @loadFrames(loadedCallback, errorCallback, loadProgressCallback)), 0)
         return
     @ended = true
     system.finish @thangs for system in @systems
