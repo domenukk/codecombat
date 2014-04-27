@@ -161,6 +161,7 @@ class Angel
       console.log "Hiring worker."
       @worker = new Worker @shared.workerCode
       @worker.addEventListener 'message', @onWorkerMessage
+      @worker.creationTime = new Date()
     #@worker.postMessage func: 'initialized' else
 
   kill: ->

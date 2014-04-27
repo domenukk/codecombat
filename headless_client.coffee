@@ -187,9 +187,9 @@ $.ajax
     LevelLoader = require 'lib/LevelLoader'
     GoalManager = require 'lib/world/GoalManager'
 
-    God = require 'lib/Buddha' # 'lib/God'
+    God = require 'lib/Buddha'
 
-    workerCode = require headlessClient + 'worker_world')
+    workerCode = require headlessClient + 'worker_world'
 
     SuperModel = require 'models/SuperModel'
 
@@ -222,7 +222,7 @@ $.ajax
           _.delay @setupSimulationAndLoadLevel, 0, test, "Testing...", status: 400
           return
 
-        if @ranonce and heapdump?
+        if @ranonce and heapdump
           console.log "Writing snapshot."
           heapdump.writeSnapshot()
         @ranonce = true
@@ -516,7 +516,7 @@ $.ajax
 
     class SimulationTask
       constructor: (@rawData) ->
-        console.log 'Simulating sessions', (session for session in @getSessions())
+        #console.log 'Simulating sessions', (session for session in @getSessions())
 
       getLevelName: ->
         levelName =  @rawData.sessions?[0]?.levelID
