@@ -1,10 +1,14 @@
-debug = false
-testing = false
-leaktest = false
-exitOnLeak = false
-heapdump = false
+###
+This file will simulate games on node.js by emulating the browser environment.
+At some point, most of the code can be merged with Simulator.coffee
+###
 
-heapdump = require('heapdump') if heapdump
+# SETTINGS
+debug = false # Enable logging of ajax calls mainly
+testing = false # Instead of simulating 'real' games, use the same one over and over again. Good for leak hunting.
+leaktest = false # Install callback that tries to find leaks automatically
+exitOnLeak = false # Exit if leak is found. Only useful if leaktest is set to true, obviously.
+heapdump = false # Dumps the whole heap after every pass. The heap dumps can then be viewed in Chrome browser.
 
 server = if testing then "http://127.0.0.1:3000" else "http://codecombat.com"
 
@@ -17,6 +21,10 @@ disable = [
 
 bowerComponents = "./bower_components/"
 headlessClient = "./headless_client/"
+
+
+# Start of the actual code. Setting up the enivronment to match the environment of the browser
+heapdump = require('heapdump') if heapdump
 
 # the path used for the loader. __dirname is module dependent.
 path = __dirname
@@ -55,8 +63,6 @@ GLOBAL.localStorage =
     getItem: (key) => store[key]
     setItem: (key, s) => store[key] = s
     removeItem: (key) => delete store[key]
-
-
 
 # Hook node.js require. See https://github.com/mfncooper/mockery/blob/master/mockery.js
 # The signature of this function *must* match that of Node's Module._load,
@@ -266,7 +272,7 @@ $.ajax
 
         @supermodel ?= new SuperModel()
 
-        console.log "Creating loader with levelID: " + levelID + " and SessionID: " + @task.getFirstSessionID() + " - task: " + JSON.stringify(@task)
+        #console.log "Creating loader with levelID: " + levelID + " and SessionID: " + @task.getFirstSessionID() + " - task: " + JSON.stringify(@task)
 
         @levelLoader = new LevelLoader supermodel: @supermodel, levelID: levelID, sessionID: @task.getFirstSessionID(), headless: true
 
@@ -275,7 +281,7 @@ $.ajax
         @listenToOnce(@levelLoader, 'loaded-all', @simulateGame)
 
       simulateGame: ->
-        console.warn "Simulate game. destroyed: " + @destroyed
+        console.warn "Simulate game."
         return if @destroyed
         @trigger 'statusUpdate', 'All resources loaded, simulating!', @task.getSessions()
         console.log "assignWorld"

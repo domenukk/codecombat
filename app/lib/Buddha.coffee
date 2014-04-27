@@ -129,7 +129,7 @@ class Angel
         clearTimeout @purgatoryTimer
         @purgatoryTimer = setInterval @testWorker, @infiniteLoopIntervalDuration
     else
-      console.log "Nobody is working with " + @id
+      console.log "No work for " + @id
       @hireWorker()
 
   abort: =>
@@ -158,7 +158,7 @@ class Angel
 
   hireWorker: ->
     unless @worker
-      console.log "Hiring worker."
+      console.log @id + ": Hiring worker."
       @worker = new Worker @shared.workerCode
       @worker.addEventListener 'message', @onWorkerMessage
       @worker.creationTime = new Date()
