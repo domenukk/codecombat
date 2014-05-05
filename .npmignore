@@ -53,6 +53,9 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 
+# IntelliJ/WebStorm
+*.iml
+
 # NPM packages folder.
 node_modules/
 
@@ -95,3 +98,7 @@ coverage/
 
 # local settings
 login.coffee
+
+# debugging
+*.heapsnapshot
+
