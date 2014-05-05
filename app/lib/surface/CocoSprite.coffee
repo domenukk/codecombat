@@ -177,8 +177,9 @@ module.exports = CocoSprite = class CocoSprite extends CocoClass
     # Gets the sprite to reflect what the current state of the thangs and surface are
     return if @stillLoading
     @updatePosition()
+    frameChanged = frameChanged or @targetScaleFactor isnt @scaleFactor
     if frameChanged
-      @updateScale() # must happen before rotation
+      @updateScale()  # must happen before rotation
       @updateAlpha()
       @updateRotation()
       @updateAction()
@@ -234,7 +235,7 @@ module.exports = CocoSprite = class CocoSprite extends CocoClass
     return unless @thang?.pos and @options.camera?
     wop = @getWorldPosition()
     [p0, p1] = [@lastPos, @thang.pos]
-    return if p0 and p0.x is p1.x and p0.y is p1.y and p0.z is p1.z and not @options.camera.tweeningZoomTo
+    return if p0 and p0.x is p1.x and p0.y is p1.y and p0.z is p1.z and not @options.camera.tweeningZoomTo and not @thang.bobHeight
     sup = @options.camera.worldToSurface wop
     [@displayObject.x, @displayObject.y] = [sup.x, sup.y]
     @lastPos = p1.copy?() or _.clone(p1)
@@ -274,7 +275,7 @@ module.exports = CocoSprite = class CocoSprite extends CocoClass
     if (@thang.scaleFactor or 1) isnt @targetScaleFactor
       createjs.Tween.removeTweens(@)
       createjs.Tween.get(@).to({scaleFactor:@thang.scaleFactor or 1}, 2000, createjs.Ease.elasticOut)
-      @targetScaleFactor = @thang.scaleFactor
+      @targetScaleFactor = @thang.scaleFactor or 1
 
   updateAlpha: ->
     @imageObject.alpha = if @hiding then 0 else 1
@@ -323,7 +324,7 @@ module.exports = CocoSprite = class CocoSprite extends CocoClass
     if not action and @thang?.actionActivated and not @stopLogging
       console.error "action is", action, "for", @thang?.id, "from", @currentRootAction, @thang.action, @thang.getActionName?()
       @stopLogging = true
-    @queueAction(action) if isDifferent or (@thang?.actionActivated and action.name isnt 'move')
+    @queueAction(action) if action and (isDifferent or (@thang?.actionActivated and action.name isnt 'move'))
     @updateActionDirection()
 
   determineAction: ->
@@ -332,8 +333,11 @@ module.exports = CocoSprite = class CocoSprite extends CocoClass
     action = thang.action if thang?.acts
     action ?= @currentRootAction.name if @currentRootAction?
     action ?= 'idle'
-    action = null unless @actions[action]?
-    return null unless action
+    unless @actions[action]?
+      @warnedFor ?= {}
+      console.warn 'Cannot show action', action, 'for', @thangType.get('name'), 'because it DNE' unless @warnedFor[action]
+      @warnedFor[action] = true
+      return if @action is 'idle' then null else 'idle'
     action = 'break' if @actions.break? and @thang?.erroredOut
     action = 'die' if @actions.die? and thang?.health? and thang.health <= 0
     @actions[action]
@@ -444,6 +448,10 @@ module.exports = CocoSprite = class CocoSprite extends CocoClass
       scaleFactor = @thang.scaleFactor ? 1
       pos.x *= @thang.scaleFactorX ? scaleFactor
       pos.y *= @thang.scaleFactorY ? scaleFactor
+    # We might need to do this, but I don't have a good test case yet. TODO: figure out.
+    #if prop isnt @registration
+    #  pos.x *= if @getActionProp 'flipX' then -1 else 1
+    #  pos.y *= if @getActionProp 'flipY' then -1 else 1
     pos
 
   createMarks: ->
@@ -589,9 +597,11 @@ module.exports = CocoSprite = class CocoSprite extends CocoClass
     # rather than an each-thang-that-shows-gold-per-team thing.
     return if @thang.gold is @lastGold
     gold = Math.floor @thang.gold
+    if @thang.world.age is 0
+      gold = @thang.world.initialTeamGold[@thang.team].gold
     return if gold is @lastGold
     @lastGold = gold
-    Backbone.Mediator.publish 'surface:gold-changed', {team: @thang.team, gold: gold}
+    Backbone.Mediator.publish 'surface:gold-changed', {team: @thang.team, gold: gold, goldEarned: Math.floor(@thang.goldEarned)}
 
   playSounds: (withDelay=true, volume=1.0) ->
     for event in @thang.currentEvents ? []

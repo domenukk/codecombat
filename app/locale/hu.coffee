@@ -15,6 +15,9 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    fork: "Fork"
     play: "Játék"
 #    retry: "Retry"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
   units:
     second: "másodperc"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 
   nav:
     play: "Játék"
+#    community: "Community"
     editor: "Szerkesztő"
     blog: "Blog"
     forum: "Fórum"
+#    account: "Account"
     admin: "Admin"
     home: "Kezdőlap"
     contribute: "Segítségnyújtás"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
     autosave: "A változtatásokat automatikusan elmentjük."
     me_tab: "Rólad"
     picture_tab: "Kép"
+#    upload_picture: "Upload a picture"
     wizard_tab: "Varázsló"
     password_tab: "Jelszó"
     emails_tab: "Levelek"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
     new_password_verify: "Új jelszó megismétlése"
     email_subscriptions: "Hírlevél feliratkozások"
     email_announcements: "Bejelentések"
-    email_notifications: "Értesítések"
-#    email_notifications_description: "Get periodic notifications for your account."
     email_announcements_description: "Szeretnél levelet kapni a legújabb fejlesztéseinkről?"
+    email_notifications: "Értesítések"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "Hozzájárulóknak szóló levelek"
     contribute_prefix: "Folyamatosan keresünk embereket, hogy csatlakozzanak hozzánk. Nézz rá a "
     contribute_page: "segítők oldalára"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
     job_profile: "Munkaköri leírás"
     job_profile_approved: "Munkaköri leírásodat a Codecombat jóváhagyta. Munkaadók mindaddig láthatják, amíg meg nem jelölöd inaktíként, vagy négy hétig,ha addig nem kerül megváltoztatásra."
     job_profile_explanation: "Szió! Töltsd ki ezt és majd kapcsolatba lépünk veled és keresünk neked egy szoftware fejlesztői állást."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
   account_profile:
     edit_settings: "Beállítások szerkesztése"
@@ -185,9 +197,9 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    our_notes: "Our Notes"
     projects: "Projektek"
 
-  munkaadók:
+  employers:
     want_to_hire_our_players: "Akarsz szakértő CodeCombat játékosokat alkalmazni?"
-    contact_george: "Vedd fel a kapcsolatot George-dzsal, hogy megtekinthesd jelöltjeinket"
+#    see_candidates: "Click here to see our candidates"
     candidates_count_prefix: "Pillanatnyilag van"
     candidates_count_many: "sok"
     candidates_count_suffix: "magasan képzett és ellenőrzött fejlesztő, aki munkát keres."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    candidate_top_skills: "Top Skills"
 #    candidate_years_experience: "Yrs Exp"
     candidate_last_updated: "Legutóbb napra-készre hozva"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
   play_level:
     level_load_error: "A pályát nem sikerült betölteni: "
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    lg_title: "Latest Games"
 #    clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
 #  editor:
 #    main_title: "CodeCombat Editors"
 #    main_description: "Build your own levels, campaigns, units and educational content. We provide all the tools you need!"
@@ -315,8 +336,8 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    thang_description: "Build units, defining their default logic, graphics and audio. Currently only supports importing Flash exported vector graphics."
 #    level_title: "Level Editor"
 #    level_description: "Includes the tools for scripting, uploading audio, and constructing custom logic to create all sorts of levels. Everything we use ourselves!"
-#    security_notice: "Many major features in these editors are not currently enabled by default. As we improve the security of these systems, they will be made generally available. If you'd like to use these features sooner, "
-#    contact_us: "contact us!"
+#    got_questions: "Questions about using the CodeCombat editors?"
+#    contact_us: "Contact us!"
 #    hipchat_prefix: "You can also find us in our"
 #    hipchat_url: "HipChat room."
 #    back: "Back"
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    new_article_title: "Create a New Article"
 #    new_thang_title: "Create a New Thang Type"
 #    new_level_title: "Create a New Level"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
 #    article_search_title: "Search Articles Here"
 #    thang_search_title: "Search Thang Types Here"
 #    level_search_title: "Search Levels Here"
-#    signup_to_create: "Sign Up to Create a New Content"
 #    read_only_warning2: "Note: you can't save any edits here, because you're not logged in."
 
 #  article:
@@ -495,7 +518,7 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    alert_account_message_suf: "first."
 #    alert_account_message_create_url: "create an account"
 #    archmage_summary: "Interested in working on game graphics, user interface design, database and server organization, multiplayer networking, physics, sound, or game engine performance? Want to help build a game to help other people learn what you are good at? We have a lot to do and if you are an experienced programmer and want to develop for CodeCombat, this class is for you. We would love your help building the best programming game ever."
-#    archmage_introduction: "One of the best parts about building games is they synthesize so many different things. Graphics, sound, real-time networking, social networking, and of course many of the more common aspects of programming, from low-level database management, and server administration to user facing design and i
+#    archmage_introduction: "One of the best parts about building games is they synthesize so many different things. Graphics, sound, real-time networking, social networking, and of course many of the more common aspects of programming, from low-level database management, and server administration to user facing design and interface building. There's a lot to do, and if you're an experienced programmer with a hankering to really dive into the nitty-gritty of CodeCombat, this class might be for you. We would love to have your help building the best programming game ever."
 #    class_attributes: "Class Attributes"
 #    archmage_attribute_1_pref: "Knowledge in "
 #    archmage_attribute_1_suf: ", or a desire to learn. Most of our code is in this language. If you're a fan of Ruby or Python, you'll feel right at home. It's JavaScript, but with a nicer syntax."
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    simple_ai: "Simple AI"
 #    warmup: "Warmup"
 #    vs: "VS"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
 #  multiplayer_launch:
 #    introducing_dungeon_arena: "Introducing Dungeon Arena"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "magyar", englishDescription: "Hungarian", t
 #    user_profile: "User Profile"
 #    patches: "Patches"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

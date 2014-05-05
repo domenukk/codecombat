@@ -3,26 +3,29 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
     loading: "加载中..."
     saving: "正在保存..."
     sending: "在发送中。。。"
-#    send: "Send"
+    send: "发送"
     cancel: "退出"
     save: "保存"
 #    publish: "Publish"
-#    create: "Create"
-#    delay_1_sec: "1 second"
-#    delay_3_sec: "3 seconds"
-#    delay_5_sec: "5 seconds"
+    create: "创建"
+    delay_1_sec: "1 秒"
+    delay_3_sec: "3 秒"
+    delay_5_sec: "5 秒"
 #    manual: "Manual"
     fork: "Fork"
     play: "玩"
-#    retry: "Retry"
+    retry: "重试"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
-#  units:
-#    second: "second"
-#    seconds: "seconds"
-#    minute: "minute"
-#    minutes: "minutes"
-#    hour: "hour"
-#    hours: "hours"
+  units:
+    second: "秒"
+    seconds: "秒"
+    minute: "分"
+    minutes: "分"
+    hour: "时"
+    hours: "时"
 
   modal:
     close: "关闭"
@@ -33,25 +36,27 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 
   nav:
     play: "玩"
+#    community: "Community"
     editor: "编辑"
     blog: "博客"
     forum: "论坛"
+    account: "账号"
     admin: "超级管理员"
     home: "首页"
-#    contribute: "Contribute"
+    contribute: "贡献"
     legal: "法律"
     about: "关于"
     contact: "联系我们"
     twitter_follow: "关注"
 #    employers: "Employers"
 
-#  versions:
-#    save_version_title: "Save New Version"
-#    new_major_version: "New Major Version"
+  versions:
+    save_version_title: "保存新版本"
+    new_major_version: "最新主要版本"
 #    cla_prefix: "To save changes, first you must agree to our"
 #    cla_url: "CLA"
 #    cla_suffix: "."
-#    cla_agree: "I AGREE"
+    cla_agree: "我同意"
 
   login:
     sign_up: "注册"
@@ -68,7 +73,7 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
     create_account_title: "创建新帐户保存游戏进度"
     description: "免费啊。先跟你讲两点你就可以开始了"
     email_announcements: "收到邮件宣告"
-#    coppa: "13+ or non-USA "
+    coppa: "13岁+ 或 非美国国籍 "
     coppa_why: "为什么？"
     creating: "账户在创新中"
     sign_up: "注册"
@@ -76,7 +81,7 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    social_signup: "Or, you can sign up through Facebook or G+:"
 
   home:
-    slogan: "通过玩儿游戏学到Javascript脚本语言"
+    slogan: "通过游戏学习Javascript脚本语言"
     no_ie: "抱歉！Internet Explorer 9等更旧的预览器打不开此网站"
     no_mobile: "CodeCombat暂时没有手机版本，可能无法运行!"
     play: "玩"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    autosave: "Changes Save Automatically"
 #    me_tab: "Me"
 #    picture_tab: "Picture"
+#    upload_picture: "Upload a picture"
 #    wizard_tab: "Wizard"
 #    password_tab: "Password"
 #    emails_tab: "Emails"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    new_password_verify: "Verify"
 #    email_subscriptions: "Email Subscriptions"
 #    email_announcements: "Announcements"
-#    email_notifications: "Notifications"
-#    email_notifications_description: "Get periodic notifications for your account."
 #    email_announcements_description: "Get emails on the latest news and developments at CodeCombat."
+#    email_notifications: "Notifications"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
 #    contributor_emails: "Contributor Class Emails"
 #    contribute_prefix: "We're looking for people to join our party! Check out the "
 #    contribute_page: "contribute page"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    job_profile: "Job Profile"
 #    job_profile_approved: "Your job profile has been approved by CodeCombat. Employers will be able to see it until you either mark it inactive or it has not been changed for four weeks."
 #    job_profile_explanation: "Hi! Fill this out, and we will get in touch about finding you a software developer job."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
 #  account_profile:
 #    edit_settings: "Edit Settings"
@@ -187,7 +199,7 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 
 #  employers:
 #    want_to_hire_our_players: "Want to hire expert CodeCombat players?"
-#    contact_george: "Contact George to see our candidates"
+#    see_candidates: "Click here to see our candidates"
 #    candidates_count_prefix: "We currently have "
 #    candidates_count_many: "many"
 #    candidates_count_suffix: "highly skilled and vetted developers looking for work."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    candidate_top_skills: "Top Skills"
 #    candidate_years_experience: "Yrs Exp"
 #    candidate_last_updated: "Last Updated"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
 #  play_level:
 #    level_load_error: "Level could not be loaded: "
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    lg_title: "Latest Games"
 #    clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
 #  editor:
 #    main_title: "CodeCombat Editors"
 #    main_description: "Build your own levels, campaigns, units and educational content. We provide all the tools you need!"
@@ -315,8 +336,8 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    thang_description: "Build units, defining their default logic, graphics and audio. Currently only supports importing Flash exported vector graphics."
 #    level_title: "Level Editor"
 #    level_description: "Includes the tools for scripting, uploading audio, and constructing custom logic to create all sorts of levels. Everything we use ourselves!"
-#    security_notice: "Many major features in these editors are not currently enabled by default. As we improve the security of these systems, they will be made generally available. If you'd like to use these features sooner, "
-#    contact_us: "contact us!"
+#    got_questions: "Questions about using the CodeCombat editors?"
+#    contact_us: "Contact us!"
 #    hipchat_prefix: "You can also find us in our"
 #    hipchat_url: "HipChat room."
 #    back: "Back"
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    new_article_title: "Create a New Article"
 #    new_thang_title: "Create a New Thang Type"
 #    new_level_title: "Create a New Level"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
 #    article_search_title: "Search Articles Here"
 #    thang_search_title: "Search Thang Types Here"
 #    level_search_title: "Search Levels Here"
-#    signup_to_create: "Sign Up to Create a New Content"
 #    read_only_warning2: "Note: you can't save any edits here, because you're not logged in."
 
 #  article:
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    simple_ai: "Simple AI"
 #    warmup: "Warmup"
 #    vs: "VS"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
 #  multiplayer_launch:
 #    introducing_dungeon_arena: "Introducing Dungeon Arena"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "中文", englishDescription: "Chinese", tra
 #    user_profile: "User Profile"
 #    patches: "Patches"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

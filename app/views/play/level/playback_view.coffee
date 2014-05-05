@@ -112,7 +112,7 @@ module.exports = class PlaybackView extends View
       @$el.find('.toggle-fullscreen').hide()
 
   updatePopupContent: ->
-    @timePopup.updateContent "<h2>#{@timeToString @newTime}</h2>#{@formatTime(@current, @currentTime)}<br/>#{@formatTime(@total, @totalTime)}"
+    @timePopup?.updateContent "<h2>#{@timeToString @newTime}</h2>#{@formatTime(@current, @currentTime)}<br/>#{@formatTime(@total, @totalTime)}"
 
   # These functions could go to some helper class
 
@@ -238,7 +238,7 @@ module.exports = class PlaybackView extends View
       @currentTime = e.frame / e.world.frameRate
       # Game will sometimes stop at 29.97, but with only one digit, this is unnecesary.
       # @currentTime = @totalTime if Math.abs(@totalTime - @currentTime) < 0.04
-      @updatePopupContent()
+      @updatePopupContent() if @timePopup?.shown
 
       @updateProgress(e.progress)
       @updatePlayButton(e.progress)
@@ -265,9 +265,9 @@ module.exports = class PlaybackView extends View
     $('.scrubber .progress-bar', @$el).css('width', "#{progress*100}%")
 
   updatePlayButton: (progress) ->
-    if progress >= 1.0 and @lastProgress < 1.0
+    if progress >= 0.99 and @lastProgress < 0.99
       $('#play-button').removeClass('playing').removeClass('paused').addClass('ended')
-    if progress < 1.0 and @lastProgress >= 1.0
+    if progress < 0.99 and @lastProgress >= 0.99
       b = $('#play-button').removeClass('ended')
       if @playing then b.addClass('playing') else b.addClass('paused')
 

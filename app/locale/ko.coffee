@@ -15,6 +15,9 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
     fork: "Fork"
     play: "시작"
 #    retry: "Retry"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
 #  units:
 #    second: "second"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
 
   nav:
     play: "레벨"
+#    community: "Community"
     editor: "에디터"
     blog: "블로그"
     forum: "포럼"
+#    account: "Account"
     admin: "관리자"
     home: "홈"
     contribute: "참여하기"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
     autosave: "변경 사항은 자동 저장 됩니다"
     me_tab: "나"
     picture_tab: "사진"
+#    upload_picture: "Upload a picture"
     wizard_tab: "마법사"
     password_tab: "비밀번호"
     emails_tab: "이메일"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
     new_password_verify: "확인(다시한번 입력해주세요)"
     email_subscriptions: "이메일 구독"
     email_announcements: "공지사항"
-    email_notifications: "알람"
-    email_notifications_description: "계정에 관련된 사항을 정기적으로 구독하세요"
     email_announcements_description: "코드 컴뱃의 개발 또는 진행상황을 이메일로 구독 하세요"
+    email_notifications: "알람"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "조력자들 이메일"
     contribute_prefix: "우리는 언제나 당신의 참여를 환영 합니다 : "
     contribute_page: "참여하기 페이지"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
 #    job_profile: "Job Profile"
 #    job_profile_approved: "Your job profile has been approved by CodeCombat. Employers will be able to see it until you either mark it inactive or it has not been changed for four weeks."
 #    job_profile_explanation: "Hi! Fill this out, and we will get in touch about finding you a software developer job."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
   account_profile:
     edit_settings: "설정사항 변경"
@@ -187,7 +199,7 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
 
 #  employers:
 #    want_to_hire_our_players: "Want to hire expert CodeCombat players?"
-#    contact_george: "Contact George to see our candidates"
+#    see_candidates: "Click here to see our candidates"
 #    candidates_count_prefix: "We currently have "
 #    candidates_count_many: "many"
 #    candidates_count_suffix: "highly skilled and vetted developers looking for work."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
 #    candidate_top_skills: "Top Skills"
 #    candidate_years_experience: "Yrs Exp"
 #    candidate_last_updated: "Last Updated"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
   play_level:
     level_load_error: "레벨 로딩 실패 : "
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
     lg_title: "가장 최근 게임"
 #    clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
   editor:
     main_title: "코드 컴뱃 에디터들"
     main_description: "당신의 레벨들, 캠페인들, 유닛 그리고 교육 컨텐츠들을 구축하세요. 우리는 당신이 필요한 모든 도구들을 제공합니다!"
@@ -315,7 +336,7 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
     thang_description: "유닛들, 기본적인 인공지능, 그래픽과 오디오등을 직접 빌드하세요. 현재는 백터 그래픽으로 추출된 플래시파일만 임폴트 가능합니다."
     level_title: "레벨 에디터"
     level_description: "스크립팅, 오디오 업로드, 모든 레벨을 생성하기 위한 사용자 정의 로직등 우리가 사용하는 모든 것들을 구축하는 것을 위한 툴들을 포함합니다."
-    security_notice: "이러한 에디터들의 중요한 특징들은 현재 대부분 기본적으로 제공되지 않습니다. 조만간 이런 시스템들의 안정성을 업그레이트 한후에, 이러한 기능들이 제공될 것입니다."
+#    got_questions: "Questions about using the CodeCombat editors?"
     contact_us: "연락하기!"
     hipchat_prefix: "당신은 또한 우리를 여기에서 찾을 수 있습니다 : "
     hipchat_url: "힙챗 룸"
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
     new_article_title: "새로운 기사 작성"
     new_thang_title: "새로운 Thang type 시작"
     new_level_title: "새로운 레벨 시작"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
     article_search_title: "기사들은 여기에서 찾으세요"
     thang_search_title: "Thang 타입들은 여기에서 찾으세요"
     level_search_title: "레벨들은 여기에서 찾으세요"
-#    signup_to_create: "Sign Up to Create a New Content"
 #    read_only_warning2: "Note: you can't save any edits here, because you're not logged in."
 
   article:
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
 #    simple_ai: "Simple AI"
 #    warmup: "Warmup"
 #    vs: "VS"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
 #  multiplayer_launch:
 #    introducing_dungeon_arena: "Introducing Dungeon Arena"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "한국어", englishDescription: "Korean", t
 #    user_profile: "User Profile"
 #    patches: "Patches"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

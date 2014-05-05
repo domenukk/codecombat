@@ -106,7 +106,6 @@ module.exports = class SpectateLevelView extends View
       spectateMode: true
       team: @getQueryVariable("team")
     @listenToOnce(@levelLoader, 'loaded-all', @onLevelLoaderLoaded)
-    @listenTo(@levelLoader, 'progress', @onLevelLoaderProgressChanged)
     @god = new God maxWorkerPoolSize: 1, maxAngels: 1
 
   getRenderData: ->
@@ -121,7 +120,8 @@ module.exports = class SpectateLevelView extends View
     super()
     $('body').addClass('is-playing')
 
-  onLevelLoaderProgressChanged: ->
+  updateProgress: (progress) ->
+    super(progress)
     return if @seenDocs
     return unless showFrequency = @levelLoader.level.get('showGuide')
     session = @levelLoader.session
@@ -141,7 +141,10 @@ module.exports = class SpectateLevelView extends View
     Backbone.Mediator.subscribeOnce 'modal-closed', @onLevelLoaderLoaded, @
     return true
 
-  onLevelLoaderLoaded: ->
+  onLoaded: ->
+    _.defer => @onLevelLoaded()
+
+  onLevelLoaded: ->
     return unless @levelLoader.progress() is 1 # double check, since closing the guide may trigger this early
     # Save latest level played in local storage
     if window.currentModal and not window.currentModal.destroyed
@@ -158,7 +161,7 @@ module.exports = class SpectateLevelView extends View
     @initSurface()
     @initGoalManager()
     @initScriptManager()
-    @insertSubviews ladderGame: @otherSession?
+    @insertSubviews()
     @initVolume()
 
     @originalSessionState = $.extend(true, {}, @session.get('state'))
@@ -226,8 +229,8 @@ module.exports = class SpectateLevelView extends View
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.fillText("Loaded #{@modelsLoaded} thingies",50,50)
 
-  insertSubviews: (subviewOptions) ->
-    @insertSubView @tome = new TomeView levelID: @levelID, session: @session, thangs: @world.thangs, supermodel: @supermodel, ladderGame: subviewOptions.ladderGame
+  insertSubviews: ->
+    @insertSubView @tome = new TomeView levelID: @levelID, session: @session, thangs: @world.thangs, supermodel: @supermodel
     @insertSubView new PlaybackView {}
 
     @insertSubView new GoldView {}

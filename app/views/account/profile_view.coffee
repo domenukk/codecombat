@@ -9,8 +9,9 @@ module.exports = class ProfileView extends View
 
   events:
     'click #toggle-job-profile-approved': 'toggleJobProfileApproved'
-    'keyup #job-profile-notes': 'onJobProfileNotesChanged'
+    'click save-notes-button': 'onJobProfileNotesChanged'
     'click #contact-candidate': 'onContactCandidate'
+    'click #enter-espionage-mode': 'enterEspionageMode'
 
   constructor: (options, @userID) ->
     @onJobProfileNotesChanged = _.debounce @onJobProfileNotesChanged, 1000
@@ -19,7 +20,9 @@ module.exports = class ProfileView extends View
       @user = me
     else
       @user = User.getByID(@userID)
-      @addResourceToLoad @user, 'user_profile'
+      @user.fetch()
+      @listenTo @user, "sync", =>
+        @render()
 
   getRenderData: ->
     context = super()
@@ -52,6 +55,17 @@ module.exports = class ProfileView extends View
     @user.save()
     @updateProfileApproval()
 
+  enterEspionageMode: ->
+    postData = emailLower: @user.get('email').toLowerCase(), usernameLower: @user.get('name').toLowerCase()
+    $.ajax
+      type: "POST",
+      url: "/auth/spy"
+      data: postData
+      success: @espionageSuccess
+
+  espionageSuccess: (model) ->
+    window.location.reload()
+
   onJobProfileNotesChanged: (e) =>
     notes = @$el.find("#job-profile-notes").val()
     @user.set 'jobProfileNotes', notes
@@ -59,11 +73,11 @@ module.exports = class ProfileView extends View
 
   iconForLink: (link) ->
     icons = [
-      {icon: 'facebook', name: 'Facebook', domain: 'facebook.com', match: /facebook/i}
-      {icon: 'twitter', name: 'Twitter', domain: 'twitter.com', match: /twitter/i}
-      {icon: 'github', name: 'GitHub', domain: 'github.com', match: /github/i}
-      {icon: 'gplus', name: 'Google Plus', domain: 'plus.google.com', match: /(google|^g).?(\+|plus)/i}
-      {icon: 'linkedin', name: 'LinkedIn', domain: 'linkedin.com', match: /(google|^g).?(\+|plus)/i}
+      {icon: 'facebook', name: 'Facebook', domain: /facebook\.com/, match: /facebook/i}
+      {icon: 'twitter', name: 'Twitter', domain: /twitter\.com/, match: /twitter/i}
+      {icon: 'github', name: 'GitHub', domain: /github\.(com|io)/, match: /github/i}
+      {icon: 'gplus', name: 'Google Plus', domain: /plus\.google\.com/, match: /(google|^g).?(\+|plus)/i}
+      {icon: 'linkedin', name: 'LinkedIn', domain: /linkedin\.com/, match: /(google|^g).?(\+|plus)/i}
     ]
     for icon in icons
       if (link.name.search(icon.match) isnt -1) or (link.link.search(icon.domain) isnt -1)

@@ -15,6 +15,9 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
     fork: "Förgrena"
     play: "Spela"
 #    retry: "Retry"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
 #  units:
 #    second: "second"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
 
   nav:
     play: "Spela"
+#    community: "Community"
     editor: "Nivåredigerare"
     blog: "Blogg"
     forum: "Forum"
+#    account: "Account"
     admin: "Admin"
     home: "Hem"
     contribute: "Bidra"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
     autosave: "Ändringar sparas automatiskt"
     me_tab: "Jag"
     picture_tab: "Profilbild"
+#    upload_picture: "Upload a picture"
     wizard_tab: "Trollkarl"
     password_tab: "Lösenord"
     emails_tab: "E-postadresser"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
     new_password_verify: "Verifiera"
     email_subscriptions: "E-postsprenumerationer"
     email_announcements: "Meddelanden"
-    email_notifications: "Påminnelser"
-    email_notifications_description: "Få periodiska påminnelser för ditt konto."
     email_announcements_description: "Få e-post med de senaste nyheterna och utvecklingen på CodeCombat."
+    email_notifications: "Påminnelser"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "E-post för bidragare"
     contribute_prefix: "Vi söker mer folk som vill var med och hjälpa till! Kolla in "
     contribute_page: " bidragarsidan "
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
 #    job_profile: "Job Profile"
 #    job_profile_approved: "Your job profile has been approved by CodeCombat. Employers will be able to see it until you either mark it inactive or it has not been changed for four weeks."
 #    job_profile_explanation: "Hi! Fill this out, and we will get in touch about finding you a software developer job."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
   account_profile:
     edit_settings: "Ändra inställningar"
@@ -187,7 +199,7 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
 
 #  employers:
 #    want_to_hire_our_players: "Want to hire expert CodeCombat players?"
-#    contact_george: "Contact George to see our candidates"
+#    see_candidates: "Click here to see our candidates"
 #    candidates_count_prefix: "We currently have "
 #    candidates_count_many: "many"
 #    candidates_count_suffix: "highly skilled and vetted developers looking for work."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
 #    candidate_top_skills: "Top Skills"
 #    candidate_years_experience: "Yrs Exp"
 #    candidate_last_updated: "Last Updated"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
   play_level:
     level_load_error: "Nivån kunde inte laddas: "
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
     lg_title: "Senaste matcher"
 #    clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
   editor:
     main_title: "CodeCombatredigerare"
     main_description: "Bygg dina egna banor, kampanjer, enheter och undervisningsinnehåll. Vi tillhandahåller alla verktyg du behöver!"
@@ -315,7 +336,7 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
     thang_description: "Bygg enheter, genom att definerade deras förinställda logik, grafik och ljud. Stöder för närvarande endast import av Flashexporterad vektorgrafik."
     level_title: "Nivåredigerare"
     level_description: "Innehåller verktygen för att skripta, ladda upp ljud och konstruera skräddarsydd logik för att skapa alla möjliga sorters nivåer. Allting vi själva använder!"
-    security_notice: "Många huvudfunktioner i dessa redigerare är för närvarande inte aktiverade från början. Allt eftersom vi ökar säkerheten i dessa system, okmmer de att bli allmänt tillgängliga. Om du skulle vilja använda dessa funktioner tidigare, "
+#    got_questions: "Questions about using the CodeCombat editors?"
     contact_us: "kontakta oss!"
     hipchat_prefix: "Du kan också hitta oss i vårt"
     hipchat_url: "HipChat-rum."
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
     new_article_title: "Skapa ny artikel"
     new_thang_title: "Skapa ny enhetstyp"
     new_level_title: "Skapa ny nivå"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
     article_search_title: "Sök artiklar här"
     thang_search_title: "Sök enhetstyper här"
     level_search_title: "Sök nivåer här"
-#    signup_to_create: "Sign Up to Create a New Content"
 #    read_only_warning2: "Note: you can't save any edits here, because you're not logged in."
 
   article:
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
     simple_ai: "Enkelt AI"
     warmup: "Uppvärmning"
     vs: "VS"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
   multiplayer_launch:
     introducing_dungeon_arena: "Introducerar grottarenan"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "Svenska", englishDescription: "Swedish", tr
 #    user_profile: "User Profile"
 #    patches: "Patches"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

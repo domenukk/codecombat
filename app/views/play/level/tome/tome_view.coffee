@@ -73,7 +73,7 @@ module.exports = class TomeView extends View
     delete @options.thangs
 
   onNewWorld: (e) ->
-    thangs = _.filter e.world.thangs, 'isSelectable'
+    thangs = _.filter e.world.thangs, 'inThangList'
     programmableThangs = _.filter thangs, 'isProgrammable'
     @createSpells programmableThangs, e.world
     @thangList.adjustThangs @spells, thangs
@@ -88,26 +88,7 @@ module.exports = class TomeView extends View
     @cast()
 
   createWorker: ->
-    return
-    # In progress
-    worker = cw
-      initialize: (scope) ->
-        self.window = self
-        self.global = self
-        console.log 'Tome worker initialized.'
-      doIt: (data, callback, scope) ->
-        console.log 'doing', what
-        try
-          importScripts '/javascripts/tome_aether.js'
-        catch err
-          console.log err.toString()
-        a = new Aether()
-        callback 'good'
-        undefined
-    onAccepted = (s) -> console.log 'accepted', s
-    onRejected = (s) -> console.log 'rejected', s
-    worker.doIt('hmm').then onAccepted, onRejected
-    worker
+    return new Worker("/javascripts/workers/aether_worker.js")
 
   generateTeamSpellMap: (spellObject) ->
     teamSpellMap = {}
@@ -138,8 +119,8 @@ module.exports = class TomeView extends View
         spellKey = pathComponents.join '/'
         @thangSpells[thang.id].push spellKey
         unless method.cloneOf
-          skipProtectAPI = @getQueryVariable "skip_protect_api", not @options.ladderGame
-          skipFlow = @getQueryVariable "skip_flow", @options.levelID is 'brawlwood' or @options.levelID is 'resource-gathering-multiplayer'
+          skipProtectAPI = @getQueryVariable "skip_protect_api", (@options.levelID in ['gridmancer'])
+          skipFlow = @getQueryVariable "skip_flow", (@options.levelID in ['brawlwood', 'greed', 'gold-rush'])
           spell = @spells[spellKey] = new Spell programmableMethod: method, spellKey: spellKey, pathComponents: pathPrefixComponents.concat(pathComponents), session: @options.session, supermodel: @supermodel, skipFlow: skipFlow, skipProtectAPI: skipProtectAPI, worker: @worker
     for thangID, spellKeys of @thangSpells
       thang = world.getThangByID thangID
@@ -197,14 +178,12 @@ module.exports = class TomeView extends View
     thang = e.thang
     spellName = e.spellName
     @spellList?.$el.hide()
-    return @clearSpellView() unless thang?.isProgrammable
-    selectedThangSpells = (@spells[spellKey] for spellKey in @thangSpells[thang.id])
-    if spellName
-      spell = _.find selectedThangSpells, {name: spellName}
-    else
-      spell = @thangList.topSpellForThang thang
-      #spell = selectedThangSpells[0]  # TODO: remember last selected spell for this thang
-    return @clearSpellView() unless spell?.canRead()
+    return @clearSpellView() unless thang
+    spell = @spellFor thang, spellName
+    unless spell?.canRead()
+      @clearSpellView()
+      @updateSpellPalette thang, spell
+      return
     unless spell.view is @spellView
       @clearSpellView()
       @spellView = spell.view
@@ -217,12 +196,25 @@ module.exports = class TomeView extends View
     @spellList.setThangAndSpell thang, spell
     @spellView?.setThang thang
     @spellTabView?.setThang thang
-    if @spellPaletteView?.thang isnt thang
-      @spellPaletteView = @insertSubView new SpellPaletteView thang: thang, supermodel: @supermodel
-      @spellPaletteView.toggleControls {}, spell.view.controlsEnabled   # TODO: know when palette should have been disabled but didn't exist
+    @updateSpellPalette thang, spell
+
+  updateSpellPalette: (thang, spell) ->
+    return unless thang and @spellPaletteView?.thang isnt thang and thang.programmableProperties or thang.apiProperties
+    @spellPaletteView = @insertSubView new SpellPaletteView thang: thang, supermodel: @supermodel, programmable: spell?.canRead()
+    @spellPaletteView.toggleControls {}, spell.view.controlsEnabled if spell   # TODO: know when palette should have been disabled but didn't exist
+
+  spellFor: (thang, spellName) ->
+    return null unless thang?.isProgrammable
+    selectedThangSpells = (@spells[spellKey] for spellKey in @thangSpells[thang.id])
+    if spellName
+      spell = _.find selectedThangSpells, {name: spellName}
+    else
+      spell = @thangList.topSpellForThang thang
+      #spell = selectedThangSpells[0]  # TODO: remember last selected spell for this thang
+    spell
 
   reloadAllCode: ->
-    spell.view.reloadCode false for spellKey, spell of @spells when spell.team is me.team
+    spell.view.reloadCode false for spellKey, spell of @spells when spell.team is me.team or (spell.team in ["common", "neutral", null])
     Backbone.Mediator.publish 'tome:cast-spells', spells: @spells
 
   updateLanguageForAllSpells: ->
@@ -230,5 +222,5 @@ module.exports = class TomeView extends View
 
   destroy: ->
     spell.destroy() for spellKey, spell of @spells
-    @worker?._close()
+    @worker?.terminate()
     super()

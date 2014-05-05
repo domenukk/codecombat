@@ -9,7 +9,7 @@ World = require 'lib/world/world'
 
 # tools
 Surface = require 'lib/surface/Surface'
-God = require 'lib/Buddha'
+God = require 'lib/God'
 GoalManager = require 'lib/world/GoalManager'
 ScriptManager = require 'lib/scripts/ScriptManager'
 LevelBus = require 'lib/LevelBus'
@@ -87,19 +87,22 @@ module.exports = class PlayLevelView extends View
     @saveScreenshot = _.throttle @saveScreenshot, 30000
 
     if @isEditorPreview
-      f = =>
-        @supermodel.shouldSaveBackups = (model) ->
-          model.constructor.className in ['Level', 'LevelComponent', 'LevelSystem']
-        @load() unless @levelLoader
+      # wait to see if it's just given to us through setLevel
+      f = => @load() unless @levelLoader
       setTimeout f, 100
     else
       @load()
       application.tracker?.trackEvent 'Started Level Load', level: @levelID, label: @levelID
 
   onLevelLoadError: (e) ->
+    # TODO NOW: remove this in favor of the supermodel handling it
     application.router.navigate "/play?not_found=#{@levelID}", {trigger: true}
 
-  setLevel: (@level, @supermodel) ->
+  setLevel: (@level, givenSupermodel) ->
+    @supermodel.models = givenSupermodel.models
+    @supermodel.collections = givenSupermodel.collections
+    @supermodel.shouldSaveBackups = givenSupermodel.shouldSaveBackups
+
     @god?.level = @level.serialize @supermodel
     if @world
       serializedLevel = @level.serialize(@supermodel)
@@ -108,12 +111,11 @@ module.exports = class PlayLevelView extends View
       @load()
 
   load: ->
-    
     @loadStartTime = new Date()
     @god = new God()
     @levelLoader = new LevelLoader supermodel: @supermodel, levelID: @levelID, sessionID: @sessionID, opponentSessionID: @getQueryVariable('opponent'), team: @getQueryVariable("team")
-    @listenToOnce(@levelLoader, 'loaded-all', @onLevelLoaderLoaded)
-    @listenTo(@levelLoader, 'progress', @onLevelLoaderProgressChanged)
+    #@listenToOnce(@levelLoader, 'loaded-all', @onLevelLoaderLoaded)
+    #@listenTo(@levelLoader, 'progress', @onLevelLoaderProgressChanged)
 
   getRenderData: ->
     c = super()
@@ -125,13 +127,14 @@ module.exports = class PlayLevelView extends View
     c
 
   afterRender: ->
+    super()
     window.onPlayLevelViewLoaded? @  # still a hack
     @insertSubView @loadingView = new LoadingView {}
     @$el.find('#level-done-button').hide()
-    super()
     $('body').addClass('is-playing')
 
-  onLevelLoaderProgressChanged: ->
+  updateProgress: (progress) ->
+    super(progress)
     return if @seenDocs
     return unless @levelLoader.session.loaded and @levelLoader.level.loaded
     return unless showFrequency = @levelLoader.level.get('showsGuide')
@@ -148,14 +151,17 @@ module.exports = class PlayLevelView extends View
     DocsModal = require './level/modal/docs_modal'
     options = {docs: @levelLoader.level.get('documentation'), supermodel: @supermodel}
     @openModalView(new DocsModal(options), true)
-    Backbone.Mediator.subscribeOnce 'modal-closed', @onLevelLoaderLoaded, @
+    Backbone.Mediator.subscribeOnce 'modal-closed', @onLevelLoaded, @
     return true
 
-  onLevelLoaderLoaded: ->
+  onLoaded: ->
+    _.defer => @onLevelLoaded()
+
+  onLevelLoaded: ->
     return unless @levelLoader.progress() is 1 # double check, since closing the guide may trigger this early
     @loadingView.showReady()
     if window.currentModal and not window.currentModal.destroyed
-      return Backbone.Mediator.subscribeOnce 'modal-closed', @onLevelLoaderLoaded, @
+      return Backbone.Mediator.subscribeOnce 'modal-closed', @onLevelLoaded, @
 
     # Save latest level played in local storage
     if not (@levelLoader.level.get('type') in ['ladder', 'ladder-tutorial'])
@@ -165,7 +171,7 @@ module.exports = class PlayLevelView extends View
     team = @getQueryVariable("team") ? @world.teamForPlayer(0)
     @loadOpponentTeam(team)
     @god.level = @level.serialize @supermodel
-    @god.setWorldClassMap @world.classMap
+    @god.worldClassMap = @world.classMap
     @setTeam team
     @initSurface()
     @initGoalManager()
@@ -211,6 +217,7 @@ module.exports = class PlayLevelView extends View
     @loadingView?.unveil()
 
   onLoadingViewUnveiled: (e) ->
+    @loadingView.$el.remove()
     @removeSubView @loadingView
     @loadingView = null
     unless @isEditorPreview
@@ -233,15 +240,15 @@ module.exports = class PlayLevelView extends View
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.fillText("Loaded #{@modelsLoaded} thingies",50,50)
 
-  insertSubviews: (subviewOptions) ->
-    @insertSubView @tome = new TomeView levelID: @levelID, session: @session, thangs: @world.thangs, supermodel: @supermodel, ladderGame: subviewOptions.ladderGame
+  insertSubviews: ->
+    @insertSubView @tome = new TomeView levelID: @levelID, session: @session, thangs: @world.thangs, supermodel: @supermodel
     @insertSubView new PlaybackView {}
     @insertSubView new GoalsView {}
     @insertSubView new GoldView {}
     @insertSubView new HUDView {}
     @insertSubView new ChatView levelID: @levelID, sessionID: @session.id, session: @session
     worldName = utils.i18n @level.attributes, 'name'
-    @controlBar = @insertSubView new ControlBarView {worldName: worldName, session: @session, level: @level, supermodel: @supermodel, playableTeams: @world.playableTeams, ladderGame: subviewOptions.ladderGame}
+    @controlBar = @insertSubView new ControlBarView {worldName: worldName, session: @session, level: @level, supermodel: @supermodel, playableTeams: @world.playableTeams}
     #Backbone.Mediator.publish('level-set-debug', debug: true) if me.displayName() is 'Nick!'
 
   afterInsert: ->
@@ -293,7 +300,7 @@ module.exports = class PlayLevelView extends View
     docs = new VictoryModal(options)
     @openModalView(docs)
     if me.get('anonymous')
-      window.nextLevelURL = @getNextLevelID()  # Signup will go here on completion instead of reloading.
+      window.nextLevelURL = @getNextLevelURL()  # Signup will go here on completion instead of reloading.
 
   onRestartLevel: ->
     @tome.reloadAllCode()
@@ -318,15 +325,17 @@ module.exports = class PlayLevelView extends View
       viewArgs: [{supermodel:@supermodel}, nextLevelID]}
 
   getNextLevel: ->
-    nextLevelOriginal = @level.get('nextLevel')?.original
+    return null unless nextLevelOriginal = @level.get('nextLevel')?.original
     levels = @supermodel.getModels(Level)
     return l for l in levels when l.get('original') is nextLevelOriginal
 
   getNextLevelID: ->
-    nextLevel = @getNextLevel()
+    return null unless nextLevel = @getNextLevel()
     nextLevelID = nextLevel.get('slug') or nextLevel.id
 
-  getNextLevelURL: -> "/play/level/#{@getNextLevelID()}"
+  getNextLevelURL: ->
+    return null unless @getNextLevelID()
+    "/play/level/#{@getNextLevelID()}"
 
   onHighlightDom: (e) ->
     if e.delay
@@ -375,14 +384,15 @@ module.exports = class PlayLevelView extends View
       .css('transform', "rotate(#{@pointerRotation}rad) translate(-3px, #{@pointerRadialDistance}px)")
       .css('top', target_top - 50)
       .css('left', target_left - 50)
-    setTimeout((=>
+    setTimeout(()=>
+      return if @destroyed
       @animatePointer()
       clearInterval(@pointerInterval)
       @pointerInterval = setInterval(@animatePointer, 1200)
-    ), 1)
+    , 1)
 
 
-  animatePointer: ->
+  animatePointer: =>
     pointer = $('#pointer')
     pointer.css('transition', 'all 0.6s ease-out')
     pointer.css('transform', "rotate(#{@pointerRotation}rad) translate(-3px, #{@pointerRadialDistance-50}px)")
@@ -419,7 +429,7 @@ module.exports = class PlayLevelView extends View
 
   initGoalManager: ->
     @goalManager = new GoalManager(@world, @level.get('goals'))
-    @god.setGoalManager @goalManager
+    @god.goalManager = @goalManager
 
   initScriptManager: ->
     @scriptManager = new ScriptManager({scripts: @world.scripts or [], view:@, session: @session})

@@ -2,7 +2,7 @@ CocoView = require 'views/kinds/CocoView'
 CocoClass = require 'lib/CocoClass'
 Level = require 'models/Level'
 LevelSession = require 'models/LevelSession'
-CocoCollection = require 'models/CocoCollection'
+CocoCollection = require 'collections/CocoCollection'
 User = require 'models/User'
 LeaderboardCollection  = require 'collections/LeaderboardCollection'
 {teamDataFromLevel} = require './utils'
@@ -36,7 +36,7 @@ module.exports = class LadderTabView extends CocoView
 
   constructor: (options, @level, @sessions) ->
     super(options)
-    @addSomethingToLoad("social_network_apis")
+    @socialNetworkRes = @supermodel.addSomethingResource("social_network_apis", 0)
     @teams = teamDataFromLevel @level
     @leaderboards = {}
     @refreshLadder()
@@ -46,17 +46,22 @@ module.exports = class LadderTabView extends CocoView
     return if @checked or (not window.FB) or (not window.gapi)
     @checked = true
 
-    @addSomethingToLoad("facebook_status", 0)  # This might not load ever, so we can't wait for it
+    # @addSomethingToLoad("facebook_status")
+
+    @fbStatusRes = @supermodel.addSomethingResource("facebook_status", 0)
+    @fbStatusRes.load()
+
     FB.getLoginStatus (response) =>
       @facebookStatus = response.status
       @loadFacebookFriends() if @facebookStatus is 'connected'
-      @somethingLoaded("facebook_status")
+      @fbStatusRes.markLoaded()
 
     if application.gplusHandler.loggedIn is undefined
       @listenToOnce(application.gplusHandler, 'checked-state', @gplusSessionStateLoaded)
     else
       @gplusSessionStateLoaded()
-    @somethingLoaded("social_network_apis")
+
+    @socialNetworkRes.markLoaded()
 
   # FACEBOOK
 
@@ -67,23 +72,29 @@ module.exports = class LadderTabView extends CocoView
   onConnectedWithFacebook: -> location.reload() if @connecting
 
   loadFacebookFriends: ->
-    @addSomethingToLoad("facebook_friends")
+    # @addSomethingToLoad("facebook_friends")
+
+    @fbFriendRes = @supermodel.addSomethingResource("facebook_friends", 0)
+    @fbFriendRes.load()
+
     FB.api '/me/friends', @onFacebookFriendsLoaded
 
   onFacebookFriendsLoaded: (response) =>
     @facebookData = response.data
     @loadFacebookFriendSessions()
-    @somethingLoaded("facebook_friends")
+    @fbFriendRes.markLoaded()
 
   loadFacebookFriendSessions: ->
     levelFrag = "#{@level.get('original')}.#{@level.get('version').major}"
     url = "/db/level/#{levelFrag}/leaderboard_facebook_friends"
-    jqxhr = $.ajax url, {
+
+    @fbFriendSessionRes = @supermodel.addRequestResource('facebook_friend_sessions', {
+      url: url
       data: { friendIDs: (f.id for f in @facebookData) }
       method: 'POST'
       success: @onFacebookFriendSessionsLoaded
-    }
-    @addRequestToLoad(jqxhr, 'facebook_friend_sessions', 'loadFacebookFriendSessions')
+    })
+    @fbFriendSessionRes.load()
 
   onFacebookFriendSessionsLoaded: (result) =>
     friendsMap = {}
@@ -105,23 +116,27 @@ module.exports = class LadderTabView extends CocoView
 
   gplusSessionStateLoaded: ->
     if application.gplusHandler.loggedIn
-      @addSomethingToLoad("gplus_friends", 0)  # This might not load ever, so we can't wait for it
+      #@addSomethingToLoad("gplus_friends")
+      @gpFriendRes = @supermodel.addSomethingResource("gplus_friends", 0)
+      @gpFriendRes.load()
       application.gplusHandler.loadFriends @gplusFriendsLoaded
 
   gplusFriendsLoaded: (friends) =>
     @gplusData = friends.items
     @loadGPlusFriendSessions()
-    @somethingLoaded("gplus_friends")
+    @gpFriendRes.markLoaded()
 
   loadGPlusFriendSessions: ->
     levelFrag = "#{@level.get('original')}.#{@level.get('version').major}"
     url = "/db/level/#{levelFrag}/leaderboard_gplus_friends"
-    jqxhr = $.ajax url, {
+
+    @gpFriendSessionRes = @supermodel.addRequestResource('gplus_friend_sessions', {
+      url: url
       data: { friendIDs: (f.id for f in @gplusData) }
       method: 'POST'
       success: @onGPlusFriendSessionsLoaded
-    }
-    @addRequestToLoad(jqxhr, 'gplus_friend_sessions', 'loadGPlusFriendSessions')
+    })
+    @gpFriendSessionRes.load()
 
   onGPlusFriendSessionsLoaded: (result) =>
     friendsMap = {}
@@ -135,13 +150,13 @@ module.exports = class LadderTabView extends CocoView
   # LADDER LOADING
 
   refreshLadder: ->
+    @ladderLimit ?= parseInt @getQueryVariable('top_players', 20)
     for team in @teams
       @leaderboards[team.id]?.destroy()
       teamSession = _.find @sessions.models, (session) -> session.get('team') is team.id
-      @ladderLimit ?= parseInt @getQueryVariable('top_players', 20)
       @leaderboards[team.id] = new LeaderboardData(@level, team.id, teamSession, @ladderLimit)
-
-      @addResourceToLoad @leaderboards[team.id], 'leaderboard', 3
+      @leaderboardRes = @supermodel.addModelResource(@leaderboards[team.id], 'leaderboard', 3)
+      @leaderboardRes.load()
 
   render: ->
     super()
@@ -153,7 +168,7 @@ module.exports = class LadderTabView extends CocoView
       $.when(
         $.get("/db/level/#{@level.get('slug')}/histogram_data?team=#{team.name.toLowerCase()}", (data) -> histogramData = data)
       ).then =>
-        @generateHistogram(histogramWrapper, histogramData, team.name.toLowerCase())
+        @generateHistogram(histogramWrapper, histogramData, team.name.toLowerCase()) unless @destroyed
 
   getRenderData: ->
     ctx = super()
@@ -210,8 +225,8 @@ module.exports = class LadderTabView extends CocoView
       .attr("x",1)
       .attr("width",width/20)
       .attr("height", (d) -> height - y(d.y))
-    if playerScore = @leaderboards[teamName].session?.get('totalScore')
-      playerScore *= 100
+    if @leaderboards[teamName].session?
+      playerScore = @leaderboards[teamName].session.get('totalScore') * 100
       scorebar = svg.selectAll(".specialbar")
         .data([playerScore])
         .enter().append("g")
@@ -227,7 +242,7 @@ module.exports = class LadderTabView extends CocoView
     if teamName.toLowerCase() is "humans" then rankClass = "rank-text humans-rank-text"
 
     message = "#{histogramData.length} players"
-    if @leaderboards[teamName].session? then message="#{@leaderboards[teamName].myRank}/#{histogramData.length}"
+    if @leaderboards[teamName].session? then message="##{@leaderboards[teamName].myRank} of #{histogramData.length}"
     svg.append("g")
       .append("text")
       .attr("class",rankClass)

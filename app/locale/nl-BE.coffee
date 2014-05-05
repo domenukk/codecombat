@@ -1,11 +1,11 @@
 module.exports = nativeDescription: "Nederlands (België)", englishDescription: "Dutch (Belgium)", translation:
   common:
-    loading: "Aan het laden..."
+    loading: "Bezig met laden..."
     saving: "Opslaan..."
     sending: "Verzenden..."
     send: "Verzend"
     cancel: "Annuleren"
-    save: "Opslagen"
+    save: "Opslaan"
     publish: "Publiceren"
     create: "Creëer"
     delay_1_sec: "1 seconde"
@@ -15,6 +15,9 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     fork: "Fork"
     play: "Spelen"
     retry: "Probeer opnieuw"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
   units:
     second: "seconde"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
 
   nav:
     play: "Levels"
+#    community: "Community"
     editor: "Editor"
     blog: "Blog"
     forum: "Forum"
+#    account: "Account"
     admin: "Administrator"
     home: "Home"
     contribute: "Bijdragen"
@@ -46,7 +51,7 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     employers: "Werkgevers"
 
   versions:
-    save_version_title: "Nieuwe versie opslagen"
+    save_version_title: "Nieuwe versie opslaan"
     new_major_version: "Nieuwe hoofd versie"
     cla_prefix: "Om bewerkingen op te slaan, moet je eerst akkoord gaan met onze"
     cla_url: "CLA"
@@ -73,7 +78,7 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     creating: "Account aanmaken..."
     sign_up: "Aanmelden"
     log_in: "inloggen met wachtwoord"
-    social_signup: "Of je kunt je registreren met Facebook of G+:" 
+    social_signup: "Of je kunt je registreren met Facebook of G+:"
 
   home:
     slogan: "Leer programmeren in JavaScript door het spelen van een spel"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     autosave: "Aanpassingen Automatisch Opgeslagen"
     me_tab: "Ik"
     picture_tab: "Afbeelding"
+#    upload_picture: "Upload a picture"
     wizard_tab: "Tovenaar"
     password_tab: "Wachtwoord"
     emails_tab: "Emails"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     new_password_verify: "Verifieer"
     email_subscriptions: "E-mail Abonnementen"
     email_announcements: "Aankondigingen"
-    email_notifications: "Notificaties"
-    email_notifications_description: "Krijg periodieke meldingen voor jouw account."
     email_announcements_description: "Verkrijg emails over het laatste nieuws en de ontwikkelingen bij CodeCombat."
+    email_notifications: "Notificaties"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "Medewerker Klasse emails"
     contribute_prefix: "We zoeken mensen om met ons te komen feesten! Bekijk de "
     contribute_page: "bijdragepagina"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     job_profile: "Job Profiel"
     job_profile_approved: "Jouw job profiel werd goedgekeurd door CodeCombat. Werkgevers zullen het kunnen bekijken totdat je het inactief zet of als er geen verandering in komt voor vier weken."
     job_profile_explanation: "Hey! Vul dit in en we zullen je contacteren om je een job als softwareontwikkelaar te helpen vinden."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
   account_profile:
     edit_settings: "Instellingen Aanpassen"
@@ -187,7 +199,7 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
 
   employers:
     want_to_hire_our_players: "Wil je expert CodeCombat spelers aanwerven? "
-    contact_george: "Contacteer George om onze kandidaten te zien"
+#    see_candidates: "Click here to see our candidates"
     candidates_count_prefix: "Momenteel hebben we "
     candidates_count_many: "veel"
     candidates_count_suffix: "zeer getalenteerde en ervaren ontwikkelaars die werk zoeken."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     candidate_top_skills: "Beste vaardigheden"
     candidate_years_experience: "Jaren ervaring"
     candidate_last_updated: "Laatst aangepast"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
   play_level:
     level_load_error: "Level kon niet geladen worden: "
@@ -293,7 +307,7 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     time_goto: "Ga naar:"
     infinite_loop_try_again: "Probeer opnieuw"
     infinite_loop_reset_level: "Level resetten"
-    infinite_loop_comment_out: "Mijn code weg commentariëren" 
+    infinite_loop_comment_out: "Mijn code weg commentariëren"
 
   admin:
     av_title: "Administrator panels"
@@ -306,16 +320,23 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     lg_title: "Laatste Spelletjes"
     clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
   editor:
     main_title: "CodeCombat Editors"
-    main_description: "Maak je eigen levels, campagnes, eenheden en leermateriaal. Wij bieden alle programma's aan die u nodig heeft!"
+    main_description: "Maak je eigen levels, campagnes, eenheden en leermateriaal. Wij bieden alle programma's aan die je nodig hebt!"
     article_title: "Artikel Editor"
     article_description: "Schrijf artikels die spelers een overzicht geven over programmeer concepten die kunnen gebruikt worden over een variëteit van levels en campagnes."
     thang_title: "Thang Editor"
     thang_description: "Maak eenheden, beschrijf hun standaard logica, graphics en audio. Momenteel is enkel het importeren van vector graphics geëxporteerd uit Flash ondersteund."
     level_title: "Level Editor"
     level_description: "Bevat de benodigdheden om scripts te schrijven, audio te uploaden en aangepaste logica te creëren om alle soorten levels te maken. Het is alles wat wij zelf ook gebruiken!"
-    security_notice: "Veel belangrijke elementen in deze editors zijn momenteel niet actief. Als wij de veiligheid van deze systemen verbeteren, zullen ook deze elementen beschikbaar worden. Indien u deze elementen al eerder wil gebruiken, "
+#    got_questions: "Questions about using the CodeCombat editors?"
     contact_us: "contacteer ons!"
     hipchat_prefix: "Je kan ons ook vinden in ons"
     hipchat_url: "(Engelstalig) HipChat kanaal."
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     new_article_title: "Maak een Nieuw Artikel"
     new_thang_title: "Maak een Nieuw Thang Type"
     new_level_title: "Maak een Nieuw Level"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
     article_search_title: "Zoek Artikels Hier"
     thang_search_title: "Zoek Thang Types Hier"
     level_search_title: "Zoek Levels Hier"
-    signup_to_create: "Registreer je om nieuwe content te maken"
     read_only_warning2: "Pas op, je kunt geen aanpassingen opslaan hier, want je bent niet ingelogd."
 
   article:
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     simple_ai: "Simpele AI"
     warmup: "Opwarming"
     vs: "tegen"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
   multiplayer_launch:
     introducing_dungeon_arena: "Introductie van Dungeon Arena"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "Nederlands (België)", englishDescription: 
     user_profile: "Gebruikersprofiel"
     patches: "Patches"
     model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

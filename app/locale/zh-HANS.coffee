@@ -15,6 +15,9 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     fork: "派生"
     play: "开始"
     retry: "重试"
+    watch: "关注"
+    unwatch: "取消关注"
+    submit_patch: "提交补丁"
 
   units:
     second: "秒"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
 
   nav:
     play: "开始游戏"
+    community: "社区"
     editor: "编辑器"
     blog: "博客"
     forum: "论坛"
+    account: "账号"
     admin: "管理"
     home: "首页"
     contribute: "贡献"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     autosave: "自动保存修改"
     me_tab: "我"
     picture_tab: "图片"
+    upload_picture: "上传一张图片"
     wizard_tab: "巫师"
     password_tab: "密码"
     emails_tab: "邮件"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     new_password_verify: "核实"
     email_subscriptions: "邮箱验证"
     email_announcements: "通知"
-    email_notifications: "通知"
-    email_notifications_description: "接收来自你的账户的定期通知。"
     email_announcements_description: "接收关于 CodeCombat 的邮件。"
+    email_notifications: "通知"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+    email_any_notes: "任何通知"
+    email_any_notes_description: "取消接收所有活动提醒邮件"
+    email_recruit_notes: "工作机会"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "贡献者通知"
     contribute_prefix: "我们在寻找志同道合的人！请到"
     contribute_page: "贡献页面"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     job_profile: "工作经历"
     job_profile_approved: "你填写的工作经历将由CodeCombat认证. 雇主将看到这些信息，除非你将它设置为不启用状态或者连续四周没有更新."
     job_profile_explanation: "你好! 填写这些信息, 我们将使用它帮你寻找一份软件开发的工作."
+#    sample_profile: "See a sample profile"
+    view_profile: "浏览个人信息"
 
   account_profile:
     edit_settings: "编辑设置"
@@ -185,9 +197,9 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
 #    our_notes: "Our Notes"
     projects: "项目"
 
-#  employers:
+  employers:
     want_to_hire_our_players: "想要雇用CodeCombat上的专业玩家？"
-    contact_george: "联系George查看”为我们义务工作的人"
+    see_candidates: "点击这里查看我们的忧患人"
     candidates_count_prefix: "我们当前有 "
     candidates_count_many: "很多"
     candidates_count_suffix: "经过我们认证的高手们正在找工作。"
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     candidate_top_skills: "高级技能"
     candidate_years_experience: "多年工作经验"
     candidate_last_updated: "最后一次更新"
+    candidate_approved: "我们"
+    candidate_active: "他们"
 
   play_level:
     level_load_error: "关卡不能载入: "
@@ -257,7 +271,7 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     editor_config_invisibles_description: "显示诸如空格或TAB键。"
     editor_config_indentguides_label: "显示缩进提示"
     editor_config_indentguides_description: "显示一条竖线以使缩进更明显。"
-#    editor_config_behaviors_label: "Smart Behaviors"
+    editor_config_behaviors_label: "聪明的行为"
     editor_config_behaviors_description: "自动完成括号，大括号和引号。"
     loading_ready: "载入完成!"
     tip_insert_positions: "使用Shift+左键来插入拼写编辑器。"
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     lg_title: "最新的游戏"
 #    clas: "CLAs"
 
+  community:
+    level_editor: "关卡编辑器"
+    main_title: "CodeCombat 社区"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
   editor:
     main_title: "CodeCombat 编辑器"
     main_description: "建立你自己的关卡、 战役、单元和教育内容。我们会提供所有你需要的工具！"
@@ -315,7 +336,7 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     thang_description: "创建单元，并定义单元的逻辑、图形和音频。目前只支持导入 Flash 导出的矢量图形。"
     level_title: "关卡编辑器"
     level_description: "所有用来创造所有难度的关卡的工具，包括脚本、上传音频和构建自定义逻辑。"
-    security_notice: "编辑器的许多主要功能并不是目前默认启动的。当我们改善完这些系统的安全性的时候，它们就会成为通常可用的。如果你想要马上使用这些功能，"
+    got_questions: "使用CodeCombat编辑器有问题？"
     contact_us: "联系我们！"
     hipchat_prefix: "你也可以在这里找到我们"
     hipchat_url: "HipChat 房间。"
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     new_article_title: "创建一个新物品"
     new_thang_title: "创建一个新物品类型"
     new_level_title: "创建一个新关卡"
+    new_article_title_signup: "注册以创建新的物品"
+    new_thang_title_signup: "注册以创建新的物品类型"
+    new_level_title_signup: "注册以创建新的关卡"
     article_search_title: "在这里搜索物品"
     thang_search_title: "在这里搜索物品类型"
     level_search_title: "在这里搜索关卡"
-    signup_to_create: "注册之后就可以创建一个新的关卡"
     read_only_warning2: "提示：你不能保存任何编辑，因为你没有登陆"
 
   article:
@@ -627,19 +650,26 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     simple_ai: "简单电脑"
     warmup: "热身"
     vs: "对决"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
   multiplayer_launch:
     introducing_dungeon_arena: "介绍地下城竞技场"
     new_way: "用代码竞技的新方式."
     to_battle: "去战斗, 开发者们!"
-#    modern_day_sorcerer: "You know how to code? That's badass. You're a modern-day sorcerer! Isn't about time that you used your magic coding powers to command your minions in epic combat? And we're not talking robots here."
-#    arenas_are_here: "CodeCombat head-to-head multiplayer arenas are here."
+    modern_day_sorcerer: "你能编程? 这太牛了。 在这个时代你就是巫师! 还不快用你编码的魔力指挥你的手下投入壮烈的战斗中么? 我们说的可不是和机器战斗哦。"
+    arenas_are_here: "CodeCombat一个多人对抗的头脑竞技场."
 #    ladder_explanation: "Choose your heroes, enchant your human or ogre armies, and climb your way over defeated fellow Wizards to reach the top of the ladders–then challenge your friends in our glorious, asynchronous multiplayer coding arenas. If you're feeling creative, you can even"
     fork_our_arenas: "派生我的竞技场"
     create_worlds: "以及创造我自己的世界."
-#    javascript_rusty: "JavaScript a bit rusty? Don't worry; there's a"
+    javascript_rusty: "对JavaScript有点生疏? 没关系，这里有一个"
     tutorial: "教程"
-#    new_to_programming: ". New to programming? Hit our beginner campaign to skill up."
+    new_to_programming: ". 编程新手? 参加我们的新手训练营来提高技能吧."
     so_ready: "我准备好了!"
 
   loading_error:
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "简体中文", englishDescription: "Chinese
     user_profile: "User Profile"
     patches: "补丁"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

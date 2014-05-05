@@ -4,6 +4,7 @@ Level = require 'models/Level'
 LevelSystem = require 'models/LevelSystem'
 World = require 'lib/world/world'
 DocumentFiles = require 'collections/DocumentFiles'
+LevelLoader = require 'lib/LevelLoader'
 
 ThangsTabView = require './thangs_tab_view'
 SettingsTabView = require './settings_tab_view'
@@ -20,7 +21,6 @@ ErrorView = require '../../error_view'
 module.exports = class EditorLevelView extends View
   id: "editor-level-view"
   template: template
-  startsLoading: true
   cache: false
 
   events:
@@ -31,55 +31,26 @@ module.exports = class EditorLevelView extends View
     'click #patches-tab': -> @patchesView.load()
     'click #level-patch-button': 'startPatchingLevel'
     'click #level-watch-button': 'toggleWatchLevel'
-    
-  subscriptions:
-    'refresh-level-editor': 'rerenderAllViews'
-
-  rerenderAllViews: ->
-    for view in [@thangsTab, @settingsTab, @scriptsTab, @componentsTab, @systemsTab, @patchesView]
-      view.render()
+    'click #pop-level-i18n-button': -> @level.populateI18N()
+    'mouseup .nav-tabs > li a': 'toggleTab'
     
   constructor: (options, @levelID) ->
     super options
-    @listenToOnce(@supermodel, 'loaded-all', @onAllLoaded)
-
-    # load only the level itself and the one it points to, but no others
-    # TODO: this is duplicated in views/play/level_view.coffee; need cleaner method
-    @supermodel.shouldPopulate = (model) ->
-      @levelsLoaded ?= 0
-      @levelsLoaded += 1 if model.constructor.className is "Level"
-      return false if @levelsLoaded > 1
-      return true
-
     @supermodel.shouldSaveBackups = (model) ->
       model.constructor.className in ['Level', 'LevelComponent', 'LevelSystem']
-
-    @level = new Level _id: @levelID
-    @listenToOnce(@level, 'sync', @onLevelLoaded)
-
-    @listenToOnce(@supermodel, 'error',
-      () =>
-        @hideLoading()
-        @insertSubView(new ErrorView())
-    )
-    @supermodel.populateModel @level
+    @levelLoader = new LevelLoader supermodel: @supermodel, levelID: @levelID, headless: true, editorMode: true
+    @level = @levelLoader.level
+    @files = new DocumentFiles(@levelLoader.level)
+    @supermodel.loadCollection(@files, 'file_names')
 
   showLoading: ($el) ->
-    $el ?= @$el.find('.tab-content')
+    $el ?= @$el.find('.outer-content')
     super($el)
 
-  onLevelLoaded: ->
-    @files = new DocumentFiles(@level)
-    @files.fetch()
-
-  onAllLoaded: ->
-    @level.unset('nextLevel') if _.isString(@level.get('nextLevel'))
-    @initWorld()
-    @startsLoading = false
-    @render()  # do it again but without the loading screen
-
-  initWorld: ->
-    @world = new World @level.name
+  onLoaded: ->
+    _.defer =>
+      @world = @levelLoader.world
+      @render()
 
   getRenderData: (context={}) ->
     context = super(context)
@@ -89,12 +60,12 @@ module.exports = class EditorLevelView extends View
     context
 
   afterRender: ->
-    return if @startsLoading
     super()
+    return unless @supermodel.finished()
     @$el.find('a[data-toggle="tab"]').on 'shown.bs.tab', (e) =>
       Backbone.Mediator.publish 'level:view-switched', e
-    @thangsTab = @insertSubView new ThangsTabView world: @world, supermodel: @supermodel
-    @settingsTab = @insertSubView new SettingsTabView world: @world, supermodel: @supermodel
+    @thangsTab = @insertSubView new ThangsTabView world: @world, supermodel: @supermodel, level: @level
+    @settingsTab = @insertSubView new SettingsTabView supermodel: @supermodel
     @scriptsTab = @insertSubView new ScriptsTabView world: @world, supermodel: @supermodel, files: @files
     @componentsTab = @insertSubView new ComponentsTabView supermodel: @supermodel
     @systemsTab = @insertSubView new SystemsTabView supermodel: @supermodel
@@ -139,3 +110,13 @@ module.exports = class EditorLevelView extends View
     button = @$el.find('#level-watch-button')
     @level.watch(button.find('.watch').is(':visible'))
     button.find('> span').toggleClass('secret')
+    
+  toggleTab: (e) ->
+    return unless $(document).width() <= 800
+    li = $(e.target).closest('li')
+    if li.hasClass('active')
+      li.parent().find('li').show()
+    else
+      li.parent().find('li').hide()
+      li.show()
+    console.log li.hasClass('active')

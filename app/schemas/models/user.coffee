@@ -20,7 +20,21 @@ UserSchema = c.object {},
   autocastDelay: {type: 'integer', 'default': 5000 }
   lastLevel: { type: 'string' }
 
-  emailSubscriptions: c.array {uniqueItems: true, 'default': ['announcement', 'notification']}, {'enum': emailSubscriptions}
+  emailSubscriptions: c.array {uniqueItems: true}, {'enum': emailSubscriptions}
+  emails: c.object {title: "Email Settings", default: {generalNews: {enabled:true}, anyNotes: {enabled:true}, recruitNotes: {enabled:true}}},
+    # newsletters
+    generalNews: { $ref: '#/definitions/emailSubscription' }
+    adventurerNews: { $ref: '#/definitions/emailSubscription' }
+    ambassadorNews: { $ref: '#/definitions/emailSubscription' }
+    archmageNews: { $ref: '#/definitions/emailSubscription' }
+    artisanNews: { $ref: '#/definitions/emailSubscription' }
+    diplomatNews: { $ref: '#/definitions/emailSubscription' }
+    scribeNews: { $ref: '#/definitions/emailSubscription' }
+
+    # notifications
+    anyNotes: { $ref: '#/definitions/emailSubscription' } # overrides any other notifications settings
+    recruitNotes: { $ref: '#/definitions/emailSubscription' }
+    employerNotes: { $ref: '#/definitions/emailSubscription' }
 
   # server controlled
   permissions: c.array {'default': []}, c.shortString()
@@ -96,7 +110,18 @@ UserSchema = c.object {},
   jobProfileApproved: {title: 'Job Profile Approved', type: 'boolean', description: 'Whether your profile has been approved by CodeCombat.'}
   jobProfileNotes: {type: 'string', maxLength: 1000, title: 'Our Notes', description: "CodeCombat's notes on the candidate.", format: 'markdown', default: ''}
   employerAt: c.shortString {description: "If given employer permissions to view job candidates, for which employer?"}
+  signedEmployerAgreement: c.object {},
+    linkedinID: c.shortString {title:"LinkedInID", description: "The user's LinkedIn ID when they signed the contract."}
+    date: c.date {title: "Date signed employer agreement"}
+    data: c.object {description: "Cached LinkedIn data slurped from profile."}
+
 
 c.extendBasicProperties UserSchema, 'user'
+
+c.definitions =
+  emailSubscription =
+    enabled: {type: 'boolean'}
+    lastSent: c.date()
+    count: {type: 'integer'}
 
 module.exports = UserSchema

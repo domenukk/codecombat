@@ -1,9 +1,12 @@
 FacebookHandler = require 'lib/FacebookHandler'
 GPlusHandler = require 'lib/GPlusHandler'
+LinkedInHandler = require 'lib/LinkedInHandler'
 locale = require 'locale/locale'
 {me} = require 'lib/auth'
 Tracker = require 'lib/Tracker'
 CocoView = require 'views/kinds/CocoView'
+
+marked.setOptions {gfm: true, sanitize: true, smartLists: true, breaks: false}
 
 # Prevent Ctrl/Cmd + [ / ], P, S
 ctrlDefaultPrevented = [219, 221, 80, 83]
@@ -33,7 +36,7 @@ Application = initialize: ->
   @facebookHandler = new FacebookHandler()
   @gplusHandler = new GPlusHandler()
   $(document).bind 'keydown', preventBackspace
-
+  @linkedinHandler = new LinkedInHandler()
   preload(COMMON_FILES)
   $.i18n.init {
     lng: me?.lang() ? 'en'

@@ -15,6 +15,9 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
     fork: "Fork"
     play: "Graj"
 #    retry: "Retry"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
 #  units:
 #    second: "second"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
 
   nav:
     play: "Graj"
+#    community: "Community"
     editor: "Edytor"
     blog: "Blog"
     forum: "Forum"
+#    account: "Account"
     admin: "Admin"
     home: "Główna"
     contribute: "Współpraca"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
     autosave: "Zmiany zapisują się automatycznie"
     me_tab: "Ja"
     picture_tab: "Zdjęcie"
+#    upload_picture: "Upload a picture"
     wizard_tab: "Czarodziej"
     password_tab: "Hasło"
     emails_tab: "Powiadomienia"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
     new_password_verify: "Zweryfikuj"
     email_subscriptions: "Powiadomienia email"
     email_announcements: "Ogłoszenia"
-    email_notifications: "Powiadomienia"
-    email_notifications_description: "Otrzymuj okresowe powiadomienia dotyczące twojego konta."
     email_announcements_description: "Otrzymuj powiadomienia o najnowszych wiadomościach i zmianach w CodeCombat."
+    email_notifications: "Powiadomienia"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "Powiadomienia asystentów"
     contribute_prefix: "Szukamy osób, które chciałyby do nas dołączyć! Sprawdź "
     contribute_page: "stronę współpracy"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
 #    job_profile: "Job Profile"
 #    job_profile_approved: "Your job profile has been approved by CodeCombat. Employers will be able to see it until you either mark it inactive or it has not been changed for four weeks."
 #    job_profile_explanation: "Hi! Fill this out, and we will get in touch about finding you a software developer job."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
   account_profile:
     edit_settings: "Edytuj ustawienia"
@@ -187,7 +199,7 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
 
 #  employers:
 #    want_to_hire_our_players: "Want to hire expert CodeCombat players?"
-#    contact_george: "Contact George to see our candidates"
+#    see_candidates: "Click here to see our candidates"
 #    candidates_count_prefix: "We currently have "
 #    candidates_count_many: "many"
 #    candidates_count_suffix: "highly skilled and vetted developers looking for work."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
 #    candidate_top_skills: "Top Skills"
 #    candidate_years_experience: "Yrs Exp"
 #    candidate_last_updated: "Last Updated"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
   play_level:
     level_load_error: "Nie udało się wczytać poziomu: "
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
     lg_title: "Ostatnie gry"
 #    clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
   editor:
     main_title: "Edytory CodeCombat"
     main_description: "Stwórz własne poziomy, kampanie, jednostki i materiały edukacyjne. Zapewniamy wszystkie narzędzia, jakich będziesz potrzebował!"
@@ -315,7 +336,7 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
     thang_description: "Twórz jednostki, definiuj ich domyślną logikę, grafiki i dźwięki. Aktualnie wspiera wyłącznie importowanie grafik wektorowych wyeksportowanych przez Flash."
     level_title: "Edytor poziomów"
     level_description: "Zawiera narzędzia do skryptowania, przesyłania dźwięków i konstruowania spersonalizowanych logik, by móc tworzyć najrozmaitsze poziomy. Wszystko to, czego sami używamy!"
-    security_notice: "Wiele ważnych funkcji nie jest obecnie domyślnie włączonych we wspomnianych edytorach. Wraz z ulepszeniem zabezpieczenia tych narzędzi, staną się one dostępne publicznie. Jeśli chciałbyś użyć ich już teraz, "
+#    got_questions: "Questions about using the CodeCombat editors?"
     contact_us: "skontaktuj się z nami!"
     hipchat_prefix: "Możesz nas też spotkać w naszym"
     hipchat_url: "pokoju HipChat."
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
     new_article_title: "Stwórz nowy artykuł"
     new_thang_title: "Stwórz nowy typ obiektu"
     new_level_title: "Stwórz nowy poziom"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
     article_search_title: "Przeszukaj artykuły"
     thang_search_title: "Przeszukaj typy obiektów"
     level_search_title: "Przeszukaj poziomy"
-#    signup_to_create: "Sign Up to Create a New Content"
 #    read_only_warning2: "Note: you can't save any edits here, because you're not logged in."
 
   article:
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
     simple_ai: "Proste AI"
     warmup: "Rozgrzewka"
 #    vs: "VS"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
   multiplayer_launch:
     introducing_dungeon_arena: "Oto Dungeon Arena"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "język polski", englishDescription: "Polish
 #    user_profile: "User Profile"
 #    patches: "Patches"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

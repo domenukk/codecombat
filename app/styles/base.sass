@@ -101,8 +101,8 @@ a[data-toggle="modal"]
 
 .modal-dialog
   padding: 5px
-  margin-top: 0px !important
-  margin-bottom: 0px !important
+  margin-top: 30px
+  margin-bottom: 0px
   padding-top: 30px
   .background-wrapper
     background: url("/images/pages/base/modal_background.png")
@@ -133,6 +133,14 @@ a[data-toggle="modal"]
     background-color: transparent
     margin: 0 14px
     border-bottom-color: #ccc
+  .modal-footer.linkedin
+    text-align: center
+    .signin-text
+      font-size: 15px
+      padding-bottom: 10px
+  .login-link
+    cursor: pointer
+      
 
 // Bigger versions of some Bootstrap icons
 // TODO: make the non-white versions of these if we ever need them
@@ -168,22 +176,26 @@ a[data-toggle="modal"]
 .icon-cog.big
   background-position: 0px 0px
 
+// loading screens for everything but the play view
 .loading-screen
-  text-align: center
   .progress
     width: 50%
     margin: 0 25%
+    
+// all loading screens
+.loading-container
+  text-align: center
   .progress-bar
     width: 0%
     transition: width 0.1s ease
-    
   .errors .alert
     padding: 5px
     display: block
     margin: 10px auto
     .btn
       margin-left: 10px
-  
+
+
 .modal
   overflow-y: auto !important
   .wait

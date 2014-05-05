@@ -15,6 +15,9 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
     fork: "Klonovat"
     play: "Přehrát"
 #    retry: "Retry"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
 #  units:
 #    second: "second"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
 
   nav:
     play: "Úrovně"
+#    community: "Community"
     editor: "Editor"
     blog: "Blog"
     forum: "Fórum"
+#    account: "Account"
     admin: "Admin"
     home: "Domů"
     contribute: "Přispívat"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
     autosave: "Automatické ukládání změn"
     me_tab: "O mne"
     picture_tab: "Obrázek"
+#    upload_picture: "Upload a picture"
     wizard_tab: "Kouzelník"
     password_tab: "Heslo"
     emails_tab: "Emaily"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
     new_password_verify: "Potvrdit"
     email_subscriptions: "Doručovat emailem"
     email_announcements: "Oznámení"
-#    email_notifications: "Notifications"
-    email_notifications_description: "Zasílat na váš účet opakovaná oznámení."
     email_announcements_description: "Zasílat emaily o posledních novinkách a o postupu ve vývoji CodeCombat."
+#    email_notifications: "Notifications"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "Emaily pro přispívatele"
     contribute_prefix: "Hledáme další přispívatele! Čtěte prosím "
     contribute_page: "stránku přispívatelům"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
 #    job_profile: "Job Profile"
 #    job_profile_approved: "Your job profile has been approved by CodeCombat. Employers will be able to see it until you either mark it inactive or it has not been changed for four weeks."
 #    job_profile_explanation: "Hi! Fill this out, and we will get in touch about finding you a software developer job."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
   account_profile:
     edit_settings: "Editovat Nastavení"
@@ -187,7 +199,7 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
 
 #  employers:
 #    want_to_hire_our_players: "Want to hire expert CodeCombat players?"
-#    contact_george: "Contact George to see our candidates"
+#    see_candidates: "Click here to see our candidates"
 #    candidates_count_prefix: "We currently have "
 #    candidates_count_many: "many"
 #    candidates_count_suffix: "highly skilled and vetted developers looking for work."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
 #    candidate_top_skills: "Top Skills"
 #    candidate_years_experience: "Yrs Exp"
 #    candidate_last_updated: "Last Updated"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
   play_level:
     level_load_error: "Úroveň se nepodařilo otevřít: "
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
     lg_title: "Poslední hry"
 #    clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
   editor:
     main_title: "Editory CodeCombatu"
     main_description: "Vytvořte vlastní úrovně, kampaně, jednotky a vzdělávací obsah. My vám poskytujeme všechny potřebné nástroje!"
@@ -315,7 +336,7 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
     thang_description: "Vytvořte jednotky, definujte jejich logiku, vlastnosti, grafiku a zvuk. Momentálně jsou podporovány pouze importy vektorové grafiky exportované z Flashe."
     level_title: "Editor úrovní"
     level_description: "Zahrnuje pomůcky pro skriptování, nahrávání audia a tvorbu vlastní logiky pro vytvoření vlastních úrovní. Obsahuje vše, čeho využíváme k tvorbě úrovní my!"
-    security_notice: "Velké množství důležitých funkcí těchto editorů je standardně vypnuto. Jak postupem času vylepšujeme bezpečnost celého systému, jsou tyto funkce uvolňovány k veřejnému použití. Potřebujete-li některé funkce dříve, "
+#    got_questions: "Questions about using the CodeCombat editors?"
     contact_us: "kontaktujte nás!"
     hipchat_prefix: "Můžete nás také najít v naší"
     hipchat_url: "HipChat diskusní místnosti."
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
 #    new_article_title: "Create a New Article"
 #    new_thang_title: "Create a New Thang Type"
 #    new_level_title: "Create a New Level"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
 #    article_search_title: "Search Articles Here"
 #    thang_search_title: "Search Thang Types Here"
 #    level_search_title: "Search Levels Here"
-#    signup_to_create: "Sign Up to Create a New Content"
 #    read_only_warning2: "Note: you can't save any edits here, because you're not logged in."
 
   article:
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
 #    simple_ai: "Simple AI"
 #    warmup: "Warmup"
 #    vs: "VS"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
 #  multiplayer_launch:
 #    introducing_dungeon_arena: "Introducing Dungeon Arena"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "čeština", englishDescription: "Czech", tr
 #    user_profile: "User Profile"
 #    patches: "Patches"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"

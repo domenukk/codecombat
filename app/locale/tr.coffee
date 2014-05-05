@@ -15,6 +15,9 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
     fork: "Çatalla"
     play: "Oyna"
     retry: "Yeniden Dene"
+#    watch: "Watch"
+#    unwatch: "Unwatch"
+#    submit_patch: "Submit Patch"
 
   units:
     second: "saniye"
@@ -33,9 +36,11 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
 
   nav:
     play: "Oyna"
+#    community: "Community"
     editor: "Düzenleyici"
     blog: "Blog"
     forum: "Forum"
+#    account: "Account"
     admin: "Yönetici"
     home: "Anasayfa"
     contribute: "Katkıda bulun"
@@ -147,6 +152,7 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
     autosave: "Değişiklikler Kendiliğinden Kaydedilir"
     me_tab: "Ben"
     picture_tab: "Resim"
+#    upload_picture: "Upload a picture"
     wizard_tab: "Sihirbaz"
     password_tab: "Şifre"
     emails_tab: "E-postalar"
@@ -156,9 +162,13 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
     new_password_verify: "Teyit Et"
     email_subscriptions: "E-posta Abonelikleri"
     email_announcements: "Duyurular"
-    email_notifications: "Bilgilendirme"
-    email_notifications_description: "Düzenli bilgilendirmelere kaydol."
     email_announcements_description: "CodeCombat ile ilgili son haberlere ve gelişmelere ulaşın."
+    email_notifications: "Bilgilendirme"
+#    email_notifications_summary: "Controls for personalized, automatic email notifications related to your CodeCombat activity."
+#    email_any_notes: "Any Notifications"
+#    email_any_notes_description: "Disable to stop all activity notification emails."
+#    email_recruit_notes: "Job Opportunities"
+#    email_recruit_notes_description: "If you play really well, we may contact you about getting you a (better) job."
     contributor_emails: "İştirakçi Sınıfı E-postaları"
     contribute_prefix: "Partimize katılmak üzere sizleri bekliyoruz ! Detaylı bilgi için "
     contribute_page: "katkı sayfasını"
@@ -170,6 +180,8 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
 #    job_profile: "Job Profile"
 #    job_profile_approved: "Your job profile has been approved by CodeCombat. Employers will be able to see it until you either mark it inactive or it has not been changed for four weeks."
 #    job_profile_explanation: "Hi! Fill this out, and we will get in touch about finding you a software developer job."
+#    sample_profile: "See a sample profile"
+#    view_profile: "View Your Profile"
 
   account_profile:
     edit_settings: "Ayarları Düzenle"
@@ -187,7 +199,7 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
 
 #  employers:
 #    want_to_hire_our_players: "Want to hire expert CodeCombat players?"
-#    contact_george: "Contact George to see our candidates"
+#    see_candidates: "Click here to see our candidates"
 #    candidates_count_prefix: "We currently have "
 #    candidates_count_many: "many"
 #    candidates_count_suffix: "highly skilled and vetted developers looking for work."
@@ -198,6 +210,8 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
 #    candidate_top_skills: "Top Skills"
 #    candidate_years_experience: "Yrs Exp"
 #    candidate_last_updated: "Last Updated"
+#    candidate_approved: "Us?"
+#    candidate_active: "Them?"
 
   play_level:
     level_load_error: "Seviye yüklenemedi: "
@@ -306,6 +320,13 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
     lg_title: "Yeni Oyunlar"
 #    clas: "CLAs"
 
+#  community:
+#    level_editor: "Level Editor"
+#    main_title: "CodeCombat Community"
+#    facebook: "Facebook"
+#    twitter: "Twitter"
+#    gplus: "Google+"
+
   editor:
     main_title: "CodeCombat Düzenleyici"
     main_description: "Kendi bölümlerinizi, seferberliklerinizi, birimlerinizi ve eğitimsel içeriklerinizi oluşturun. Gereken tüm araçları sağlıyoruz!"
@@ -315,7 +336,7 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
     thang_description: "Öntanımlı mantıkları, grafik ve seslerini tanımlayarak birimler üretin. Şimdilik sadece Flash ile dışa aktarılmış vektör grafikleri desteklenmektedir."
     level_title: "Bölüm Düzenleyici"
     level_description: "Her türde bölüm oluşturmak için betik yazma, ses yükleme ve özel mantık inşası için araçları içermektedir. Kendi kullandığımız her şey!"
-    security_notice: "Bu düzenleyicilerin çoğu özelliği öntanımlı olarak şimdilik etkin değildir. Bu sistemlerin güvenliklerini arttırdığımızda herkese açık olacaklar. Eğer bu özellikleri daha önceden kullanmak isterseniz,"
+#    got_questions: "Questions about using the CodeCombat editors?"
     contact_us: "bize ulaşın!"
     hipchat_prefix: "Bizi ayrıca"
     hipchat_url: "HipChat otasında bulabilirsiniz."
@@ -357,10 +378,12 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
 #    new_article_title: "Create a New Article"
 #    new_thang_title: "Create a New Thang Type"
     new_level_title: "Yeni Bir Seviye Oluştur"
+#    new_article_title_signup: "Sign Up to Create a New Article"
+#    new_thang_title_signup: "Sign Up to Create a New Thang Type"
+#    new_level_title_signup: "Sign Up to Create a New Level"
 #    article_search_title: "Search Articles Here"
 #    thang_search_title: "Search Thang Types Here"
     level_search_title: "Seviye ara"
-#    signup_to_create: "Sign Up to Create a New Content"
 #    read_only_warning2: "Note: you can't save any edits here, because you're not logged in."
 
   article:
@@ -627,6 +650,13 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
 #    simple_ai: "Simple AI"
 #    warmup: "Warmup"
 #    vs: "VS"
+#    friends_playing: "Friends Playing"
+#    sign_up_for_friends: "Sign up to play with your friends!"
+#    social_connect_blurb: "Connect and play against your friends!"
+#    invite_friends_to_battle: "Invite your friends to join you in battle!"
+#    fight: "Fight!"
+#    watch_victory: "Watch your victory"
+#    defeat_the: "Defeat the"
 
 #  multiplayer_launch:
 #    introducing_dungeon_arena: "Introducing Dungeon Arena"
@@ -669,3 +699,14 @@ module.exports = nativeDescription: "Türkçe", englishDescription: "Turkish", t
 #    user_profile: "User Profile"
 #    patches: "Patches"
 #    model: "Model"
+#    system: "System"
+#    component: "Component"
+#    components: "Components"
+#    thang: "Thang"
+#    thangs: "Thangs"
+#    level_session: "Your Session"
+#    opponent_session: "Opponent Session"
+#    article: "Article"
+#    user_names: "User Names"
+#    files: "Files"
+#    top_simulators: "Top Simulators"
