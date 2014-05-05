@@ -92,7 +92,6 @@ mongo/
 bin/node/
 bin/mongo/
 
-
 # Karma coverage
 coverage/
 
