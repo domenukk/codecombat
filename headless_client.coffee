@@ -52,6 +52,8 @@ Worker::removeEventListener = (what) ->
 
 GLOBAL.tv4 = require('tv4').tv4
 
+GLOBAL.marked = setOptions: ->
+
 GLOBAL.navigator =
 #  userAgent: "nodejs"
   platform: "headless_client"
