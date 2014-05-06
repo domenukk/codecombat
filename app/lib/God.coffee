@@ -18,7 +18,7 @@ module.exports = class God
     options ?= {}
     @maxAngels = options.maxAngels ? 2  # How many concurrent web workers to use; if set past 8, make up more names
     @maxWorkerPoolSize = options.maxWorkerPoolSize ? 2  # ~20MB per idle worker
-    @workerCode = options.workerCode
+    @workerCode = options.workerCode if options.workerCode?
     @angels = []
     @firstWorld = true
     Backbone.Mediator.subscribe 'tome:cast-spells', @onTomeCast, @
@@ -291,8 +291,6 @@ class Angel
     @worker.addEventListener 'message', @onWorkerMessage
 
   onWorkerMessage: (event) =>
-    console.log JSON.stringify event
-
     switch event.data.type
       when 'worker-initialized'
         console.log "Worker", @id, "initialized after", ((new Date()) - @worker.creationTime), "ms (we had been waiting for it)"
