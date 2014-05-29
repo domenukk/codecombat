@@ -54,6 +54,8 @@ $.extend = (deep, into, from) ->
     copy = into
   copy
 
+$.Deferred = Deferred
+
 $.isArray = (object) ->
   _.isArray object
 

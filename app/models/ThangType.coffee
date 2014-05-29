@@ -1,5 +1,7 @@
-CocoModel = require('./CocoModel')
+CocoModel = require './CocoModel'
 SpriteBuilder = require 'lib/sprites/SpriteBuilder'
+indexedDB = new (require 'lib/IndexedDB')
+indexedDB.open()
 
 buildQueue = []
 
@@ -70,7 +72,7 @@ module.exports = class ThangType extends CocoModel
     @addGeneralFrames() unless @options.portraitOnly
     @addPortrait()
     @building[key] = true
-    result = @finishBuild()
+    result = @checkCacheDB()
     return result
 
   initBuild: (options) ->
@@ -145,9 +147,25 @@ module.exports = class ThangType extends CocoModel
     return frames unless _.isString(frames) # don't accidentally do this again
     (parseInt(f, 10) + frameOffset for f in frames.split(','))
 
-  finishBuild: ->
-    return if _.isEmpty(@builder._animations)
+  checkChacheDB: =>
     key = @spriteSheetKey(@options)
+    indexedDB.open().done =>
+      indexedDB.getSpritesheet(key).done((sprite)=>
+        @gotSpriteAsync key, sprite
+      ).fail ->
+        @finishBuild key
+    key
+
+  gotSpriteAsync: (key, sprite)=>
+    @spriteSheets[key] = sprite
+    delete @building[key]  # Can use null/false instead? This is wayy slower.
+    @builder = null # TODO: Should this not be done for async build? Needs to be tested.
+    @options = null
+    indexedDB.putSpritesheet key, sprite
+    @trigger 'build-complete', {key:key, thangType:@}
+
+  finishBuild: (key)=>
+    return if _.isEmpty(@builder._animations)
     spriteSheet = null
     if @options.async
       buildQueue.push @builder
@@ -155,24 +173,18 @@ module.exports = class ThangType extends CocoModel
       @builder.buildAsync() unless buildQueue.length > 1
       @builder.on 'complete', @onBuildSpriteSheetComplete, @, true, [@builder, key, @options]
       @builder = null
-      return key
-    spriteSheet = @builder.build()
-    @logBuild @t0, false, @options.portraitOnly
-    @spriteSheets[key] = spriteSheet
-    delete @building[key]
-    @builder = null
-    @options = null
-    spriteSheet
+    else
+      spriteSheet = @builder.build()
+      @logBuild @t0, false, @options.portraitOnly
+      gotSpriteAsync key, sprite
 
   onBuildSpriteSheetComplete: (e, data) ->
     [builder, key, options] = data
-    @logBuild builder.t0, true, options.portraitOnly
+    @logBuild builder.t0, true, options.portraitOnly if builder?
     buildQueue = buildQueue.slice(1)
     buildQueue[0].t0 = new Date().getTime() if buildQueue[0]
     buildQueue[0]?.buildAsync()
-    @spriteSheets[key] = e.target.spriteSheet
-    delete @building[key]
-    @trigger 'build-complete', {key:key, thangType:@}
+    @gotSpriteAsync key, e.target.spriteSheet
     @vectorParser = null
 
   logBuild: (startTime, async, portrait) ->
