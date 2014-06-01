@@ -47,23 +47,29 @@ module.exports = class IndexedDB
     request.onerror = (event) -> deferred.reject event
     deferred
 
-  putSpritesheets: (key, sprite) ->
-    deferred = $.Deferred() # This could be fire and forget.
-    transaction = db.transaction([@spriteSheetKey], "readwrite");
+  putSpritesheet: (key, sprite) ->
+    deferred = $.Deferred()
+    transaction = db.transaction [@spriteSheetKey], "readwrite"
     transaction.oncomplete = (event)-> deferred.resolve event
     transaction.onerror = (event)-> deferred.reject event
-    objectStore = transaction.objectStore(@spriteSheetKey);
+    objectStore = transaction.objectStore @spriteSheetKey
     request = objectStore.add key: key, sprite: sprite
     request.onsuccess = (event)->
         console.log "Added spritesheet to cache with key ", event.target.result
+    request.onerror = (event)->
+      console.error "Adding spritesheet", key, " to database failed:", event
     deferred
 
   clearCache: ->
     deferred = $.Deferred()
     store = getObjectStore
     req = @getObjectStore(@spreteSheetKey, 'readwrite').clear();
-    req.onsuccess = (event) -> deferred.resolve event
-    req.onerror = (event) -> deferred.reject event
+    req.onsuccess = (event) ->
+      console.log "Cleared imagecache successfully.", event
+      deferred.resolve event
+    req.onerror = (event) ->
+      console.log "Clearing imagecache failed.", event
+      deferred.reject event
     deferred
 
 
