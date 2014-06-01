@@ -5,7 +5,7 @@
 module.exports = class IndexedDB
   dbName: "CoCo"
   spriteSheetKey: "spriteSheets"
-  dbVersion: 1 # A change in the number (=Version, NOT a decimal) will trigger onupgradeneeded in open.
+  dbVersion: 3 # A change in the number (=Version, NOT a decimal) will trigger onupgradeneeded in open.
 
   constructor: ->
     @indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -15,10 +15,10 @@ module.exports = class IndexedDB
   isSupported: ->
     @indexedDB?
 
-  open: ->
+  open: (created=false) ->
     deferred = $.Deferred()
     if @db
-      deferred.resolve created:false, opened: false
+      deferred.resolve created: created, opened: false
     else unless @isSupported
       deferred.reject dbSupported: false
     else
@@ -26,24 +26,28 @@ module.exports = class IndexedDB
       request.onerror = (event) -> deferred.reject dbSupported: true, event: event
       request.onsuccess = (event) =>
         @db = request.result
-        deferred.resolve created: false, opened: true, event: event
+        deferred.resolve created: created, opened: true, event: event
       request.onupgradeneeded = (event) =>
         # We want to structure our database here. If we cache more foo, hook this up some nicer config.
+        console.log "Upgrade needed", event
         @db = event.target.result;
-        spriteSheetStore = db.createObjectStore(@spriteSheetKey, { keyPath: "key"});
-        deferred.resolve created: true, opened, true, event: event
+        spriteSheetStore = @db.createObjectStore @spriteSheetKey, keyPath: "key"
+        open true
+        #deferred.resolve created: true, opened: true, event: event
     deferred
 
   close: ->
     @db.close()
 
   getObjectStore: (storeName, mode) ->
-    db.transaction([storeName], mode).objectStore(storeName)
+    @db.transaction([storeName], mode).objectStore storeName
 
   getSpritesheet: (key) ->
     deferred = $.Deferred()
-    request = @getObjectStore(@spriteSheetKey).get key
-    request.onsuccess = (event) -> deferred.resolve event.target.result.sprite, event
+    request = @getObjectStore(@spriteSheetKey, "readonly").get key
+    request.onsuccess = (event) ->
+      deferred.resolve event.target.result.sprite, event if event.target.result?
+      deferred.reject "Image not cached."
     request.onerror = (event) -> deferred.reject event
     deferred
 
@@ -62,8 +66,7 @@ module.exports = class IndexedDB
 
   clearCache: ->
     deferred = $.Deferred()
-    store = getObjectStore
-    req = @getObjectStore(@spreteSheetKey, 'readwrite').clear();
+    req = @getObjectStore(@spreteSheetKey, "readwrite").clear();
     req.onsuccess = (event) ->
       console.log "Cleared imagecache successfully.", event
       deferred.resolve event

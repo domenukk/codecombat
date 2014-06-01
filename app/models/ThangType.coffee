@@ -1,4 +1,4 @@
-CocoModel = require './CocoModel'
+CocoModel = require('./CocoModel')
 SpriteBuilder = require 'lib/sprites/SpriteBuilder'
 indexedDB = new (require 'lib/IndexedDB')
 indexedDB.open()
@@ -75,7 +75,7 @@ module.exports = class ThangType extends CocoModel
     result = @checkCacheDB()
     return result
 
-  initBuild: (options) ->
+  initBuild: (options) =>
     @buildActions() if not @actions
     @vectorParser = new SpriteBuilder(@, options)
     @builder = new createjs.SpriteSheetBuilder()
@@ -99,7 +99,7 @@ module.exports = class ThangType extends CocoModel
       @builder.addAnimation 'portrait', frames, true
     else if portrait.container
       s = @vectorParser.buildContainerFromStore(portrait.container)
-      frame = @builder.addFrame(s, rect, scale)
+      frame = @builder.addFrame s, rect, scale
       @builder.addAnimation 'portrait', [frame], false
 
   addGeneralFrames: ->
@@ -147,22 +147,23 @@ module.exports = class ThangType extends CocoModel
     return frames unless _.isString(frames) # don't accidentally do this again
     (parseInt(f, 10) + frameOffset for f in frames.split(','))
 
-  checkChacheDB: =>
+  checkCacheDB: =>
     key = @spriteSheetKey(@options)
     indexedDB.open().done =>
-      indexedDB.getSpritesheet(key).done((sprite)=>
+      indexedDB.getSpritesheet(key).done((sprite, event)=>
         @gotSpriteAsync key, sprite
-      ).fail ->
+      ).fail =>
+        console.log "Cache miss for ", key
         @finishBuild key
     key
 
   gotSpriteAsync: (key, sprite)=>
     @spriteSheets[key] = sprite
     delete @building[key]  # Can use null/false instead? This is wayy slower.
-    @builder = null # TODO: Should this not be done for async build? Needs to be tested.
+    @builder = null # TODO: Does this fail for async building?
     @options = null
     indexedDB.putSpritesheet key, sprite
-    @trigger 'build-complete', {key:key, thangType:@}
+    @trigger 'build-complete', key:key, thangType:@
 
   finishBuild: (key)=>
     return if _.isEmpty(@builder._animations)
