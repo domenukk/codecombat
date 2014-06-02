@@ -51,9 +51,9 @@ module.exports = class IndexedDB
     request.onerror = (event) -> deferred.reject event
     deferred
 
-  putSpritesheet: (key, sprite) ->
+  putSpritesheet: (key, sprite  ) ->
     deferred = $.Deferred()
-    transaction = db.transaction [@spriteSheetKey], "readwrite"
+    transaction = @db.transaction [@spriteSheetKey], "readwrite"
     transaction.oncomplete = (event)-> deferred.resolve event
     transaction.onerror = (event)-> deferred.reject event
     objectStore = transaction.objectStore @spriteSheetKey

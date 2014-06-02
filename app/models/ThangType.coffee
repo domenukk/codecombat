@@ -22,7 +22,7 @@ module.exports = class ThangType extends CocoModel
     @resetRawData() unless @get('raw')
 
   resetRawData: ->
-    @set('raw', {shapes:{}, containers:{}, animations:{}})
+    @set 'raw', shapes:{}, containers:{}, animations:{}
 
   resetSpriteSheetCache: ->
     @buildActions()
@@ -50,7 +50,9 @@ module.exports = class ThangType extends CocoModel
   getSpriteSheet: (options) ->
     options = @fillOptions options
     key = @spriteSheetKey(options)
-    return @spriteSheets[key] or @buildSpriteSheet(options)
+    spriteSheet = @spriteSheets[key]
+    return spriteSheet if spriteSheet?
+    @buildSpriteSheet()
 
   fillOptions: (options) ->
     options ?= {}
@@ -66,16 +68,12 @@ module.exports = class ThangType extends CocoModel
     if ss = @spriteSheets[key] then return ss
     if @building[key]
       @options = null
-      return key
-    @t0 = new Date().getTime()
-    @initBuild(options)
-    @addGeneralFrames() unless @options.portraitOnly
-    @addPortrait()
-    @building[key] = true
-    result = @checkCacheDB()
-    return result
+    else
+      @t0 = new Date().getTime()
+      @checkCacheDB key
+    key
 
-  initBuild: (options) =>
+  initBuild: (options) ->
     @buildActions() if not @actions
     @vectorParser = new SpriteBuilder(@, options)
     @builder = new createjs.SpriteSheetBuilder()
@@ -147,26 +145,31 @@ module.exports = class ThangType extends CocoModel
     return frames unless _.isString(frames) # don't accidentally do this again
     (parseInt(f, 10) + frameOffset for f in frames.split(','))
 
-  checkCacheDB: =>
-    key = @spriteSheetKey(@options)
+  checkCacheDB: (key)=>
+    @building[key] = true
     indexedDB.open().done =>
-      indexedDB.getSpritesheet(key).done((sprite, event)=>
-        @gotSpriteAsync key, sprite
+      indexedDB.getSpritesheet(key).done(
+        (sprite, event)=>
+          @gotSpriteAsync key, sprite, true
       ).fail =>
-        console.log "Cache miss for ", key
-        @finishBuild key
+        console.log "Cache miss for", key
+        @initBuild @options
+        @addGeneralFrames() unless @options.portraitOnly
+        @addPortrait()
+        @finishBuild @options
     key
 
-  gotSpriteAsync: (key, sprite)=>
+  gotSpriteAsync: (key, sprite, fromDB=false)=>
     @spriteSheets[key] = sprite
-    delete @building[key]  # Can use null/false instead? This is wayy slower.
-    @builder = null # TODO: Does this fail for async building?
-    @options = null
-    indexedDB.putSpritesheet key, sprite
+    indexedDB.putSpritesheet key, sprite unless fromDB
     @trigger 'build-complete', key:key, thangType:@
+    @building[key] = false
+    @builder = null
+    @options = null
 
-  finishBuild: (key)=>
+  finishBuild: ->
     return if _.isEmpty(@builder._animations)
+    key = @spriteSheetKey @options
     spriteSheet = null
     if @options.async
       buildQueue.push @builder
@@ -177,15 +180,17 @@ module.exports = class ThangType extends CocoModel
     else
       spriteSheet = @builder.build()
       @logBuild @t0, false, @options.portraitOnly
-      gotSpriteAsync key, sprite
+      @gotSpriteAsync key, spriteSheet
 
   onBuildSpriteSheetComplete: (e, data) ->
     [builder, key, options] = data
-    @logBuild builder.t0, true, options.portraitOnly if builder?
+    @logBuild builder.t0, true, options.portraitOnly
     buildQueue = buildQueue.slice(1)
     buildQueue[0].t0 = new Date().getTime() if buildQueue[0]
     buildQueue[0]?.buildAsync()
-    @gotSpriteAsync key, e.target.spriteSheet
+    @spriteSheets[key] = e.target.spriteSheet
+    @building[key] = false
+    @trigger 'build-complete', {key:key, thangType:@}
     @vectorParser = null
 
   logBuild: (startTime, async, portrait) ->
@@ -257,7 +262,7 @@ module.exports = class ThangType extends CocoModel
       force: 'true'
     $.ajax('/file', { type: 'POST', data: body, success: callback or @onFileUploaded })
 
-  onFileUploaded: =>
+  onFileUploaded: ->
     console.log 'Image uploaded'
 
   @loadUniversalWizard: ->
