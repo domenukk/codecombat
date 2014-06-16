@@ -18,6 +18,13 @@ module.exports = class ThangType extends CocoModel
     @on 'sync', @setDefaults
     @spriteSheets = {}
 
+    ## Testing memory clearing
+    #f = =>
+    #  console.info 'resetting raw data'
+    #  @unset 'raw'
+    #  @_previousAttributes.raw = null
+    #setTimeout f, 40000
+
   setDefaults: ->
     @resetRawData() unless @get('raw')
 
@@ -67,7 +74,7 @@ module.exports = class ThangType extends CocoModel
     key = @spriteSheetKey(@options)
     if ss = @spriteSheets[key] then return ss
     if @building[key]
-      @options = null
+      # TODO: Y Nullpointer? @options = null
     else
       @t0 = new Date().getTime()
       @checkCacheDB key
@@ -149,14 +156,14 @@ module.exports = class ThangType extends CocoModel
     @building[key] = true
     indexedDB.open().done =>
       indexedDB.getSpritesheet(key).done(
-        (sprite, event)=>
+        (sprite, event) =>
           @gotSpriteAsync key, sprite, true
       ).fail =>
         console.log "Cache miss for", key
         @initBuild @options
         @addGeneralFrames() unless @options.portraitOnly
         @addPortrait()
-        @finishBuild @options
+        @finishBuild()
     key
 
   gotSpriteAsync: (key, sprite, fromDB=false)=>

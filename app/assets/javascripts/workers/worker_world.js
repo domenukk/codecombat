@@ -60,11 +60,14 @@ self.console = console;
 
 self.importScripts('/javascripts/world.js', '/javascripts/lodash.js', '/javascripts/aether.js');
 
-// We could do way more from this: http://stackoverflow.com/questions/10653809/making-webworkers-a-safe-environment
-Object.defineProperty(self, "XMLHttpRequest", {
-  get: function() { throw new Error("Access to XMLHttpRequest is forbidden."); },
-  configurable: false
-});
+var restricted = ["XMLHttpRequest", "importScripts", "Worker"];
+for(var i = 0; i < restricted.length; ++i) {
+  // We could do way more from this: http://stackoverflow.com/questions/10653809/making-webworkers-a-safe-environment
+  Object.defineProperty(self, restricted[i], {
+    get: function() { throw new Error("Access to that global property is forbidden."); },
+    configurable: false
+  });
+}
 
 self.transferableSupported = function transferableSupported() {
   if (typeof self._transferableSupported !== 'undefined') return self._transferableSupported;
@@ -289,6 +292,7 @@ self.setupDebugWorldToRunUntilFrame = function (args) {
             return;
         }
         Math.random = self.debugWorld.rand.randf;  // so user code is predictable
+        Aether.replaceBuiltin("Math", Math);
     }
     self.debugWorld.totalFrames = args.frame; //hack to work around error checking
     self.currentDebugWorldFrame = args.frame;
@@ -343,6 +347,7 @@ self.runWorld = function runWorld(args) {
     return;
   }
   Math.random = self.world.rand.randf;  // so user code is predictable
+  Aether.replaceBuiltin("Math", Math);
   self.postMessage({type: 'start-load-frames'});
   self.world.loadFrames(self.onWorldLoaded, self.onWorldError, self.onWorldLoadProgress);
 };

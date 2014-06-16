@@ -15,7 +15,7 @@ module.exports = class IndexedDB
   isSupported: ->
     @indexedDB?
 
-  open: (created=false) ->
+  open: (created=false) =>
     deferred = $.Deferred()
     if @db
       deferred.resolve created: created, opened: false
@@ -51,7 +51,7 @@ module.exports = class IndexedDB
     request.onerror = (event) -> deferred.reject event
     deferred
 
-  putSpritesheet: (key, sprite  ) ->
+  putSpritesheet: (key, sprite) ->
     deferred = $.Deferred()
     transaction = @db.transaction [@spriteSheetKey], "readwrite"
     transaction.oncomplete = (event)-> deferred.resolve event
@@ -59,7 +59,7 @@ module.exports = class IndexedDB
     objectStore = transaction.objectStore @spriteSheetKey
     request = objectStore.add key: key, sprite: sprite
     request.onsuccess = (event)->
-        console.log "Added spritesheet to cache with key ", event.target.result
+      console.log "Added spritesheet to cache with key ", event.target.result
     request.onerror = (event)->
       console.error "Adding spritesheet", key, " to database failed:", event
     deferred
