@@ -1,6 +1,7 @@
 # This class connects to, initializes and uses the indexedDB.
 # Currently only used for caching images.
 
+JASON = require 'JASON'
 
 module.exports = class IndexedDB
   dbName: "CoCo"
@@ -46,7 +47,7 @@ module.exports = class IndexedDB
     deferred = $.Deferred()
     request = @getObjectStore(@spriteSheetKey, "readonly").get key
     request.onsuccess = (event) ->
-      deferred.resolve event.target.result.sprite, event if event.target.result?
+      deferred.resolve JASON.parse(event.target.result.sprite), event if event.target.result?
       deferred.reject "Image not cached."
     request.onerror = (event) -> deferred.reject event
     deferred
@@ -57,7 +58,7 @@ module.exports = class IndexedDB
     transaction.oncomplete = (event)-> deferred.resolve event
     transaction.onerror = (event)-> deferred.reject event
     objectStore = transaction.objectStore @spriteSheetKey
-    request = objectStore.add key: key, sprite: sprite
+    request = objectStore.add key: key, sprite: JASON.stringify(sprite)
     request.onsuccess = (event)->
       console.log "Added spritesheet to cache with key ", event.target.result
     request.onerror = (event)->
